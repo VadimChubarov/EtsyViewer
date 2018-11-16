@@ -100,10 +100,10 @@ public interface MainInterface
         Call<Category> findAllTopCategory();
 
         @GET(findAllListingActive+"?api_key="+ApiKey)
-        Call<Listing> findAllListingActive(@Query("category") String category, @Query("keywords") String keywords);
+        Call<Listing> findAllListingActive(@Query("category") String category, @Query("keywords") String keywords, @Query("limit") Integer limit);
 
         @GET(findAllListingActive+"?api_key="+ApiKey)
-        Call<Listing> findAllListingActive(@Query("category") String category, @Query("keywords") String keywords,@Query("page") Integer page);
+        Call<Listing> findAllListingActive(@Query("category") String category, @Query("keywords") String keywords, @Query("limit") Integer limit ,@Query("page") Integer page);
 
         @GET(findAllListingImages+"?api_key="+ApiKey)
         Call<ListingImage> findAllListingImages (@Query("listing_id") Integer listing_id);

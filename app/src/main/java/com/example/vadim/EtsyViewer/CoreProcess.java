@@ -83,7 +83,7 @@ public class CoreProcess implements MainInterface.Model
         readyForSearch = false;
         currentLinstingResponse = null;
 
-        Call<Listing> listingsCall = api.findAllListingActive(categoty,keyWords);
+        Call<Listing> listingsCall = api.findAllListingActive(categoty,keyWords,10);
         try{currentLinstingResponse = listingsCall.execute().body();}catch(IOException e){}
 
         readyForSearch = true;
@@ -95,7 +95,7 @@ public class CoreProcess implements MainInterface.Model
         currentLinstingResponse = null;
 
         int nextPage = Integer.parseInt(page);
-        Call<Listing> listingsCall = api.findAllListingActive(categoty,keyWords,nextPage);
+        Call<Listing> listingsCall = api.findAllListingActive(categoty,keyWords,10,nextPage);
 
         try{currentLinstingResponse = listingsCall.execute().body();}catch(IOException e){}
 
