@@ -2,6 +2,7 @@ package com.example.vadim.EtsyViewer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -55,12 +56,15 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         ViewPager viewPager = findViewById(R.id.viewpager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(searchTabFragment,"SEARCH");
-        adapter.addFragment(favoritesTabFragment,"FAVORITES");
+        adapter.addFragment(searchTabFragment,"Find products");
+        adapter.addFragment(favoritesTabFragment, "Favorites");
 
         viewPager.setAdapter(adapter);
         TabLayout tabLayout =  findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.magnifying_glass1);
+        tabLayout.getTabAt(1).setIcon(R.drawable.star1);
     }
 
     public void showLoadingDialog(boolean show)
