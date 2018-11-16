@@ -1,8 +1,10 @@
 package com.example.vadim.EtsyViewer;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +19,10 @@ public class ItemDetailsActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
+
+        ActionBar bar = getSupportActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
+        bar.setDisplayShowTitleEnabled(false);
 
         ImageView itemPicture = findViewById(R.id.ItemPicture);
         TextView itemHeader = findViewById(R.id.ItemHeader);
@@ -39,5 +45,12 @@ public class ItemDetailsActivity extends AppCompatActivity
         itemHeader.setText(currentItem.getHeader());
         itemDescription.setText(currentItem.getDescription());
         itemPrice.setText(currentItem.getPrice());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home) {onBackPressed();}
+        return false;
     }
 }

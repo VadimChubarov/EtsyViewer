@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     {
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().hide();
     }
 
     private void createViewPager()
