@@ -5,19 +5,24 @@
                 android:background="#e5e5e5"
                 android:id="@+id/fragmentLayout">
 
-    <Button android:layout_width="100dp"
+    <Button android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:textColor="#FFFF"
+            android:text="search"
+            android:textAllCaps="false"
+            android:backgroundTint="#c43c00"
             android:layout_alignBaseline="@id/search_bar1"
-            android:text="@string/submit"
             android:id="@+id/submit"/>
 
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="100dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="110dp"
+            android:layout_marginRight="90dp"
+            android:background="#FFFF"
             android:id="@+id/search_bar1"
             android:inputType="text"/>
 
@@ -25,8 +30,10 @@
             android:id="@+id/spinner1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:backgroundTint="#FF6D00"
             android:layout_below="@id/search_bar1"/>
 
 </RelativeLayout>
