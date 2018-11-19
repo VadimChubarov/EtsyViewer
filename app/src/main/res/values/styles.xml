@@ -6,11 +6,28 @@
         <item name="colorPrimary">#FF6D00</item>
         <item name="colorPrimaryDark">#c43c00</item>
         <item name="colorAccent">#c43c00</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:spinnerItemStyle">@style/mySpinnerItemSelectedStyle</item>
+        <item name="android:dropDownListViewStyle">@style/mySpinnerItemSelectedStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">#FF6D00</item>
+        <item name="colorPrimaryDark">#c43c00</item>
+        <item name="colorAccent">#c43c00</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="mySpinnerItemSelectedStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:textColor">@color/spinnerTextColor</item>
+        <item name="android:popupBackground">@color/spinnerBackground</item>
+        <item name="android:divider">@color/colorPrimary</item>
+        <item name="android:dividerHeight">0.5dp</item>
+        <item name="android:scrollbarSize">2dp</item>
+        <item name="android:scrollbarThumbVertical">@color/colorPrimary</item>
+
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

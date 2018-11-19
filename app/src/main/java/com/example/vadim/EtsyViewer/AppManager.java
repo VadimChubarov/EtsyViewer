@@ -33,6 +33,11 @@ public class AppManager implements MainInterface.Presenter
             return appManager;
         }
 
+        public static void onDestroy()
+        {
+           appManager = null;
+        }
+
         public static AppManager getInstance() {return appManager;}
 
 
@@ -128,6 +133,7 @@ public class AppManager implements MainInterface.Presenter
         coreProcess.deleteListing(listingId);
         mainActivity.getFavoritesTabFragment().showRecyclerItems();
     }
+
 
 
 
