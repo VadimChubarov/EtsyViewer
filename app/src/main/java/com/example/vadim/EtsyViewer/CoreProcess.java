@@ -198,6 +198,7 @@ public class CoreProcess implements MainInterface.Model
     public void deleteListing(int listingId)
     {
         savedListings.remove(listingId);
+        saveSession();
     }
 
     @Override

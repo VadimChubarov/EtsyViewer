@@ -1,14 +1,9 @@
 package com.example.vadim.EtsyViewer;
-
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 
-import java.lang.reflect.Field;
 
 public class SerachTabFragment extends Fragment
 {
@@ -35,20 +30,6 @@ public class SerachTabFragment extends Fragment
 
         if(spinner.getAdapter()==null){showProgressBar(true);}
 
-        try {
-            Field popup = Spinner.class.getDeclaredField("mPopup");
-            popup.setAccessible(true);
-
-            // Get private mPopup member variable and try cast to ListPopupWindow
-            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(spinner);  // to be checked !!!
-
-            // Set popupWindow height to 500px
-            popupWindow.setHeight(1700);
-        }
-        catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-            // silently fail...
-        }
-
         submitButton.setOnClickListener(AppManager.getInstance().getAppListener());
 
         return myFragmentView;
@@ -56,6 +37,10 @@ public class SerachTabFragment extends Fragment
 
     public void setSpinner(ArrayAdapter<String> adapter)
     {
+        DropDownListDecorator decorator = new DropDownListDecorator();
+
+        decorator.setMaxiDropDownHeight(this.getContext(),spinner,0.7);
+
         this.spinner.setAdapter(adapter);
     }
 
@@ -75,6 +60,4 @@ public class SerachTabFragment extends Fragment
         {progressBar.setVisibility(View.VISIBLE);}
         else {progressBar.setVisibility(View.INVISIBLE);}
     }
-
-
 }
