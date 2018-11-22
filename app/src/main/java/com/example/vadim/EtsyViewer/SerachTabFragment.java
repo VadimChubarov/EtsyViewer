@@ -8,6 +8,7 @@ import android.widget.*;
 public class SerachTabFragment extends Fragment
 {
     private Spinner spinner;
+    private ImageView spinnerImage;
     private EditText searchBar;
     private ProgressBar progressBar;
     @Override
@@ -24,6 +25,7 @@ public class SerachTabFragment extends Fragment
                 container, false);
 
         spinner = myFragmentView.findViewById(R.id.spinner1);
+        spinnerImage = myFragmentView.findViewById(R.id.spinner_image);
         Button submitButton = myFragmentView.findViewById(R.id.submit);
         searchBar = myFragmentView.findViewById(R.id.search_bar1);
         progressBar = myFragmentView.findViewById(R.id.categories_progress);
@@ -37,9 +39,8 @@ public class SerachTabFragment extends Fragment
 
     public void setSpinner(ArrayAdapter<String> adapter)
     {
-        DropDownListDecorator decorator = new DropDownListDecorator();
-
-        decorator.setMaxiDropDownHeight(this.getContext(),spinner,0.7);
+        DropDownListLimiter listLimiter = new DropDownListLimiter();
+        listLimiter.setMaxiDropDownHeight(this.getContext(),spinner,0.7);
 
         this.spinner.setAdapter(adapter);
     }
@@ -57,7 +58,10 @@ public class SerachTabFragment extends Fragment
     public void showProgressBar(boolean show)
     {
         if (show)
-        {progressBar.setVisibility(View.VISIBLE);}
-        else {progressBar.setVisibility(View.INVISIBLE);}
+        {progressBar.setVisibility(View.VISIBLE);
+         spinnerImage.setVisibility(View.INVISIBLE);}
+        else
+            {progressBar.setVisibility(View.INVISIBLE);
+             spinnerImage.setVisibility(View.VISIBLE);}
     }
 }

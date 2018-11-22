@@ -2,20 +2,12 @@ package com.example.vadim.EtsyViewer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 
 public class MainActivity extends AppCompatActivity implements MainInterface.View
 {
@@ -95,10 +87,11 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
     public void showCategories(String[] categories)
     {
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item,categories);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(MainActivity.this,R.layout.spinner_item_selected,categories);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         searchTabFragment.setSpinner(spinnerAdapter);
         searchTabFragment.showProgressBar(false);
+
     }
 
     @Override

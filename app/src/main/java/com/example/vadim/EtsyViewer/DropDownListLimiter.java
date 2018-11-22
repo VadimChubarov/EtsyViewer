@@ -7,9 +7,10 @@ import android.view.WindowManager;
 import android.widget.Spinner;
 import java.lang.reflect.Field;
 
-public class DropDownListDecorator
+public class DropDownListLimiter
 {
-    public void setMaxiDropDownHeight(Context targetContext, Spinner spinner, double dropDownMaxHeight /* % to screen size : 1.0 - fullScreen*/) {
+    public void setMaxiDropDownHeight(Context targetContext, Spinner spinner, double dropDownMaxHeight /* % to screen size : 1.0 - fullScreen*/)
+    {
         Display display = ((WindowManager) targetContext.getSystemService(targetContext.WINDOW_SERVICE)).getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
