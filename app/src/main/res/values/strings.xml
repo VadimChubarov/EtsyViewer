@@ -5,4 +5,5 @@
     <string name="submit">SUBMIT</string>
     <string name="search">search</string>
     <string name="category">Product category</string>
+    <string name="enter_keywords">Enter keywords</string>
 </resources>
