@@ -3,17 +3,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:layout_marginBottom="10dp"
                 android:id="@+id/recyclerViewElement">
 
-    <ImageView android:layout_width="100dp"
-               android:layout_height="100dp"
-               android:layout_marginLeft="5dp"
+    <ImageView android:layout_width="110dp"
+               android:layout_height="65dp"
+               android:layout_marginLeft="0dp"
+               android:layout_centerVertical="true"
+               android:layout_marginRight="20dp"
+               android:scaleType="centerCrop"
                android:id="@+id/recyclerImage"/>
 
-    <TextView android:layout_width="match_parent" android:layout_height="100dp"
+    <TextView android:layout_width="match_parent" android:layout_height="88dp"
               android:layout_toRightOf="@id/recyclerImage"
-              android:layout_marginRight="5dp"
-              android:layout_marginLeft="5dp"
+              android:layout_marginRight="40dp"
+              android:layout_marginLeft="0dp"
+              android:layout_centerVertical="true"
+              android:textSize="15sp"
+              android:maxLines="3"
+              android:gravity="center"
+              android:textAlignment="textStart"
+              android:lineSpacingExtra="4dp"
               android:id="@+id/recyclerText"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:visibility="invisible"/>
+    <View
+            android:id="@+id/divider"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_alignLeft="@id/recyclerText"/>
 </RelativeLayout>

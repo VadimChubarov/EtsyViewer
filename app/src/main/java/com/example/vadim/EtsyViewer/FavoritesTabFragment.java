@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -32,7 +33,7 @@ public class FavoritesTabFragment extends Fragment
                 container, false);
 
         favoritesRecycler = myFragmentView.findViewById(R.id.favorites_recycler);
-        runSearchResultsRecycler();
+        runFavoritesRecycler();
         showRecyclerItems();
 
         return myFragmentView ;
@@ -59,10 +60,9 @@ public class FavoritesTabFragment extends Fragment
         favoritesContextMenu.showContextMenu(menu,menuInfo);
     }
 
-    private void runSearchResultsRecycler()
+    private void runFavoritesRecycler()
     {
         favoritesRecycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
         recyclerAdapter = new RecyclerAdapter();
         favoritesRecycler.setAdapter(recyclerAdapter);
     }
