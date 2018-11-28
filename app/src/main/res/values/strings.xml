@@ -6,4 +6,6 @@
     <string name="search">search</string>
     <string name="category">Product category</string>
     <string name="enter_keywords">Enter keywords</string>
+    <string name="menu_cancel">menu cancel</string>
+    <string name="menu_delete">delete item</string>
 </resources>

@@ -14,7 +14,7 @@ public class AppManager implements MainInterface.Presenter
     private AppListener appListener;
     private ArrayList<RecyclerItemData> searchResults;
     private SwipeRefreshLayout currentSearchLayout;
-    private RecyclerAdapter currentRecyclerAdapter;
+    private SelectableRecyclerAdapter currentRecyclerAdapter;
 
         private AppManager(MainActivity mainActivity)
         {
@@ -53,9 +53,9 @@ public class AppManager implements MainInterface.Presenter
 
     public SwipeRefreshLayout getCurrentSearchLayout() {return currentSearchLayout;}
 
-    public RecyclerAdapter getCurrentRecyclerAdapter() {return currentRecyclerAdapter;}
+    public SelectableRecyclerAdapter getCurrentRecyclerAdapter() {return currentRecyclerAdapter;}
 
-    public void setCurrentRecyclerAdapter(RecyclerAdapter currentRecyclerAdapter) {this.currentRecyclerAdapter = currentRecyclerAdapter;}
+    public void setCurrentRecyclerAdapter(SelectableRecyclerAdapter currentRecyclerAdapter) {this.currentRecyclerAdapter = currentRecyclerAdapter;}
 
 
     public RecyclerItemData getSearchResultsItem (int listingId)
@@ -131,9 +131,17 @@ public class AppManager implements MainInterface.Presenter
     public void deleteListing(int listingId)
     {
         coreProcess.deleteListing(listingId);
-        mainActivity.getFavoritesTabFragment().showRecyclerItems();
+
     }
 
+    public void deleteSelectedListings(List<RecyclerItemData> selectedItems)
+    {
+        for(RecyclerItemData item : selectedItems)
+        {
+            deleteListing(item.getListingId());
+        }
+        mainActivity.getFavoritesTabFragment().showRecyclerItems();
+    }
 
 
 

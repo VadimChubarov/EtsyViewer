@@ -3,6 +3,7 @@ package com.example.vadim.EtsyViewer;
 
 public class RecyclerItemData
 {
+    boolean isSelected;
     private int listingId;
     private String header;
     private String description;
@@ -20,6 +21,14 @@ public class RecyclerItemData
         this.pictureURL = pictureURL;
         this.price = "$ "+price;
 
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getHeader() {

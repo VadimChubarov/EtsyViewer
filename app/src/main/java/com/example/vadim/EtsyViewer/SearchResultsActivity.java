@@ -13,7 +13,7 @@ public class SearchResultsActivity extends AppCompatActivity
 {
     private SwipeRefreshLayout searchSwipeLayout;
     private RecyclerView searchResultsRecycler;
-    private RecyclerAdapter recyclerAdapter;
+    private SelectableRecyclerAdapter recyclerAdapter;
     private LinearLayoutManager layoutManager;
     private String category;
     private String keyWords;
@@ -67,7 +67,7 @@ public class SearchResultsActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         searchResultsRecycler.setLayoutManager(layoutManager);
 
-        recyclerAdapter = new RecyclerAdapter();
+        recyclerAdapter = new SelectableRecyclerAdapter();
         searchResultsRecycler.setAdapter(recyclerAdapter);
 
         RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener()

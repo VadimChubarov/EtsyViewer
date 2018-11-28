@@ -171,7 +171,7 @@ public class CoreProcess implements MainInterface.Model
         {
           if (listingImage.getResults().get(0).getListingId() == listingId)
           {
-              listingImageURL = listingImage.getResults().get(0).getUrl75x75();
+              listingImageURL = listingImage.getResults().get(0).getUrl170x135();
               listingPictureURL = listingImage.getResults().get(0).getUrlFullxfull();
           }
         }

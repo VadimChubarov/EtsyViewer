@@ -1,10 +1,10 @@
 package com.example.vadim.EtsyViewer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -13,11 +13,7 @@ import android.view.*;
 public class FavoritesTabFragment extends Fragment
 {
     private RecyclerView favoritesRecycler;
-    private RecyclerAdapter recyclerAdapter;
-    private boolean isFavoritesScreenActive;
-    private ContextMenuManager favoritesContextMenu;
-
-
+    private SelectableRecyclerAdapter recyclerAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -44,26 +40,27 @@ public class FavoritesTabFragment extends Fragment
     {
         super.onResume();
         showRecyclerItems();
-        isFavoritesScreenActive = true;
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        isFavoritesScreenActive = false;
+        recyclerAdapter.activateActionMode(false);
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser)
     {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        favoritesContextMenu.showContextMenu(menu,menuInfo);
+        super.setUserVisibleHint(isVisibleToUser);
+        if(!isVisibleToUser && recyclerAdapter!=null){recyclerAdapter.activateActionMode(false);}
     }
 
     private void runFavoritesRecycler()
     {
         favoritesRecycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerAdapter = new RecyclerAdapter();
+        recyclerAdapter = new SelectableRecyclerAdapter();
+        recyclerAdapter.setSelectionColor("#33c43c00");
         favoritesRecycler.setAdapter(recyclerAdapter);
     }
 
@@ -74,11 +71,4 @@ public class FavoritesTabFragment extends Fragment
         {recyclerAdapter.setItems(AppManager.getInstance().getSavedListings());}
     }
 
-    public boolean isFavoritesScreenActive() {
-        return isFavoritesScreenActive;
-    }
-
-    public void setFavoritesContextMenu(ContextMenuManager favoritesContextMenu) {
-        this.favoritesContextMenu = favoritesContextMenu;
-    }
 }

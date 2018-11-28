@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
         AppManager appManager = AppManager.getInstance(this);
         appManager.createListOfCategories();
+
+
     }
 
     @Override
@@ -48,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
     private void createToolbar()
     {
-        Toolbar toolbar =  findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().hide();
+       Toolbar toolbar =  findViewById(R.id.toolbar);
+       setSupportActionBar(toolbar);
+       getSupportActionBar().hide();
     }
 
     private void createViewPager()
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
         tabLayout.getTabAt(0).setIcon(R.drawable.magnifying_glass1);
         tabLayout.getTabAt(1).setIcon(R.drawable.star1);
+
     }
 
     public void showLoadingDialog(boolean show)
