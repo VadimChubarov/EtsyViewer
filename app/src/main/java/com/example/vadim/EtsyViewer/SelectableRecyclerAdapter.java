@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.lguipeng.library.animcheckbox.AnimCheckBox;
 import com.squareup.picasso.Picasso;
-
 import java.util.*;
 
 public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRecyclerAdapter.RecyclerViewHolder>
