@@ -1,6 +1,5 @@
 package com.example.vadim.EtsyViewer;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,6 +61,13 @@ public class FavoritesTabFragment extends Fragment
         recyclerAdapter = new SelectableRecyclerAdapter();
         recyclerAdapter.setSelectionColor("#33c43c00");
         favoritesRecycler.setAdapter(recyclerAdapter);
+
+        favoritesRecycler.getItemAnimator().setRemoveDuration(500);
+        favoritesRecycler.getItemAnimator().setMoveDuration(500);
+        favoritesRecycler.getItemAnimator().setChangeDuration(500);
+        favoritesRecycler.getItemAnimator().setAddDuration(500);
+
+
     }
 
     public void showRecyclerItems()

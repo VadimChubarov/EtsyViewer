@@ -140,7 +140,6 @@ public class AppManager implements MainInterface.Presenter
         {
             deleteListing(item.getListingId());
         }
-        mainActivity.getFavoritesTabFragment().showRecyclerItems();
     }
 
 

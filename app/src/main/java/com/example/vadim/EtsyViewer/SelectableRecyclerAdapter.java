@@ -26,7 +26,11 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         TimerTask timerTask = new TimerTask()
         {
             @Override
-            public void run() {view.setVisibility(View.INVISIBLE);}
+            public void run()
+            {
+                if(!((AnimCheckBox) view).isChecked())
+                {view.setVisibility(View.INVISIBLE);}
+            }
         };
         delayVisibility.schedule(timerTask,delay);
     }
@@ -36,22 +40,18 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         this.selectionColor = Color.parseColor(selectionColor);
     }
 
-    public void setItemCheckbox(View ItemView, Boolean active)
+    public void setItemCheckbox(View ItemView, boolean active, boolean animation)
     {
         final AnimCheckBox itemCheckbox = ItemView.findViewById(R.id.recycler_checkbox);
-        itemCheckbox.setChecked(true);
-        boolean animation = true;
-        itemCheckbox.setChecked(false, animation);
-        itemCheckbox.setClickable(false);
 
         if(active)
         {
             itemCheckbox.setVisibility(View.VISIBLE);
-            itemCheckbox.setChecked(true);
+            itemCheckbox.setChecked(true,animation);
         }
         else
             {
-                itemCheckbox.setChecked(false);
+                itemCheckbox.setChecked(false,animation);
                 activateDelayVisibility(itemCheckbox,400);
             }
     }
@@ -67,6 +67,17 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         recyclerItemDataList.clear();
         notifyDataSetChanged();
     }
+
+   public void deleteSelectedItems()
+   {
+       for (int i = 0; i < recyclerItemDataList.size();i++)
+       {
+           if(recyclerItemDataList.get(i).isSelected()){recyclerItemDataList.remove(i);i--;}
+           notifyItemRemoved(i);
+           notifyItemRangeChanged(i,getItemCount());
+       }
+
+   }
 
     public void activateActionMode(boolean activate)
     {
@@ -89,11 +100,11 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         return false;
     }
 
-    public void selectItem(int position, View itemView)
+    public void selectItem(int position, View itemView, boolean animation)
     {
         recyclerItemDataList.get(position).setSelected(true);
         itemView.setBackgroundColor(selectionColor);
-        setItemCheckbox(itemView,true);
+        setItemCheckbox(itemView,true,animation);
         updateActionModeItemCount();
     }
 
@@ -102,21 +113,22 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         recyclerItemDataList.get(position).setSelected(false);
 
         itemView.setBackgroundColor(Color.TRANSPARENT);
-        setItemCheckbox(itemView,false);
+        setItemCheckbox(itemView,false,true);
         if (!anyItemSelected())
         {
             activateActionMode(false);
         }
         updateActionModeItemCount();
+
     }
 
     public void cancelAllSelections()
     {
-        for (RecyclerItemData item : recyclerItemDataList)
+        for (int i = 0; i < recyclerItemDataList.size(); i++)
         {
-           item.setSelected(false);
+           recyclerItemDataList.get(i).setSelected(false);
+           notifyItemChanged(i);
         }
-        notifyDataSetChanged();
     }
 
     public List<RecyclerItemData> getAllSelectedItems()
@@ -151,13 +163,15 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i)
     {
         recyclerViewHolder.bind(recyclerItemDataList.get(i));
-        recyclerViewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
-        recyclerViewHolder.recyclerCheckBox.setVisibility(View.INVISIBLE);
 
         if (recyclerItemDataList.get(i).isSelected())
         {
-            selectItem(i, recyclerViewHolder.itemView);
-        }
+            selectItem(i, recyclerViewHolder.itemView,false);
+        }else
+            {
+                recyclerViewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                recyclerViewHolder.recyclerCheckBox.setVisibility(View.INVISIBLE);
+            }
 
         OnItemClickListener onItemClickListener = new OnItemClickListener(i);
         recyclerViewHolder.itemView.setOnLongClickListener(onItemClickListener);
@@ -190,6 +204,8 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         {
             recyclerText.setText(recyclerItemData.getHeader());
             Picasso.with(itemView.getContext()).load(recyclerItemData.getImageURL()).into(recyclerImage);
+            recyclerCheckBox.setChecked(false,false);
+            recyclerCheckBox.setClickable(false);
         }
     }
 
@@ -209,7 +225,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
                 if (selectedItemsMode != null && !currentItem.isSelected())
                 {
-                    selectItem(position, v); selectedItemsMode.setTitle(String.valueOf(getAllSelectedItems().size()));
+                    selectItem(position, v,true); selectedItemsMode.setTitle(String.valueOf(getAllSelectedItems().size()));
                 }
                 else if (selectedItemsMode != null && currentItem.isSelected())
                 {
@@ -230,7 +246,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             if (!currentItem.isSelected())
             {
                 if (selectedItemsMode == null){activateActionMode(true);}
-                selectItem(position, v);
+                selectItem(position, v,true);
             }
             else {cancelItemSelection(position, v);}
 
@@ -259,6 +275,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             switch(item.getItemId())
             {
                 case R.id.menu_delete : AppManager.getInstance().deleteSelectedListings(getAllSelectedItems());
+                                        deleteSelectedItems();
                                         if (!anyItemSelected()){activateActionMode(false);}
                 break;
             }
