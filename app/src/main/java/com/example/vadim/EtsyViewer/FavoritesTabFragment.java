@@ -45,14 +45,14 @@ public class FavoritesTabFragment extends Fragment
     public void onPause()
     {
         super.onPause();
-        recyclerAdapter.activateActionMode(false);
+        recyclerAdapter.getRecyclerActionMode().activateActionMode(false);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser)
     {
         super.setUserVisibleHint(isVisibleToUser);
-        if(!isVisibleToUser && recyclerAdapter!=null){recyclerAdapter.activateActionMode(false);}
+        if(!isVisibleToUser && recyclerAdapter!=null){recyclerAdapter.getRecyclerActionMode().activateActionMode(false);}
     }
 
     private void runFavoritesRecycler()
@@ -61,13 +61,7 @@ public class FavoritesTabFragment extends Fragment
         recyclerAdapter = new SelectableRecyclerAdapter();
         recyclerAdapter.setSelectionColor("#33c43c00");
         favoritesRecycler.setAdapter(recyclerAdapter);
-
-        favoritesRecycler.getItemAnimator().setRemoveDuration(500);
-        favoritesRecycler.getItemAnimator().setMoveDuration(500);
-        favoritesRecycler.getItemAnimator().setChangeDuration(500);
-        favoritesRecycler.getItemAnimator().setAddDuration(500);
-
-
+        new RecyclerAnimator().setDeleteAnimationSpeed(favoritesRecycler,500);
     }
 
     public void showRecyclerItems()

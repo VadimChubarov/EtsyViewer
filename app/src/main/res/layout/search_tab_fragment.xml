@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffffff"
                 android:id="@+id/fragmentLayout">
 
-    <Button android:layout_width="70dp"
+    <Button
+            android:layout_width="70dp"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
             android:textColor="#FFFF"
             android:text="@string/search"
             android:textAllCaps="false"
-            android:backgroundTint="#c43c00"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="100dp"
             android:textSize="14sp"
             android:elevation="2dp"
+            android:backgroundTint="#c43c00"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="100dp"
             android:id="@+id/submit"/>
 
-    <ImageView android:layout_width="match_parent"
-               android:layout_height="28dp"
-               android:layout_marginTop="106dp"
-               android:layout_marginLeft="10dp"
-               android:layout_marginRight="5dp"
-               android:layout_toLeftOf="@id/submit"
-               android:background="@drawable/spinner_frame"/>
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginTop="106dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/submit"
+            android:background="@drawable/spinner_frame"/>
 
     <EditText
             android:layout_width="match_parent"
@@ -57,12 +59,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/category"
+            android:textSize="14sp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/search_bar1"
             android:padding="5dp"
-            android:textSize="14sp"
             android:id="@+id/category_text"/>
 
     <Spinner
@@ -84,5 +86,4 @@
             android:layout_alignBottom="@id/spinner1"
             android:src="@drawable/ic_expand_more_black_24dp"
             android:id="@+id/spinner_image"/>
-
 </RelativeLayout>

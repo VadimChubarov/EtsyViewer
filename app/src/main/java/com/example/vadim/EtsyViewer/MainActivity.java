@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 
 public class MainActivity extends AppCompatActivity implements MainInterface.View
 {
-
     private SerachTabFragment searchTabFragment;
     private FavoritesTabFragment favoritesTabFragment;
     private ProgressDialog progressDialog;
@@ -29,16 +28,10 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
         searchResultsIntent = new Intent(this,SearchResultsActivity.class);
         itemDetailsIntent = new Intent(this,ItemDetailsActivity.class);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setCancelable(false);
-
+        progressDialog = LoadingDialogManager.getProgressDialog("Loading...",false,this);
 
         AppManager appManager = AppManager.getInstance(this);
         appManager.createListOfCategories();
-
-
     }
 
     @Override
@@ -72,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
         tabLayout.getTabAt(0).setIcon(R.drawable.magnifying_glass1);
         tabLayout.getTabAt(1).setIcon(R.drawable.star1);
-
     }
 
     public void showLoadingDialog(boolean show)
@@ -84,17 +76,12 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
     public Intent getItemDetailsIntent() {return itemDetailsIntent;}
 
-    public FavoritesTabFragment getFavoritesTabFragment() {return favoritesTabFragment;}
-
-    public SerachTabFragment getSearchTabFragment() {return searchTabFragment;}
-
     public void showCategories(String[] categories)
     {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(MainActivity.this,R.layout.spinner_item_selected,categories);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         searchTabFragment.setSpinner(spinnerAdapter);
         searchTabFragment.showProgressBar(false);
-
     }
 
     @Override

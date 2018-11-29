@@ -80,14 +80,16 @@ public class ApiRequestManager extends AsyncTask<String,Void,String[]>
     }
 
     @Override
-    protected void onPostExecute(String[] results)
+    protected void onPostExecute(String[] categories)
     {
-        super.onPostExecute(results);
+        super.onPostExecute(categories);
 
         switch (responseType)
         {
             case "Categories":
-                AppManager.getInstance().getMainActivity().showCategories(results);
+                for(int i = 0 ; i < categories.length; i++)
+                {categories[i] = categories[i].replace("_"," ");}
+                AppManager.getInstance().getMainActivity().showCategories(categories);
                 break;
 
             case "Listings":
