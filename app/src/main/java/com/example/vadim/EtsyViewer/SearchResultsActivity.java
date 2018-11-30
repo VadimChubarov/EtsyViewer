@@ -8,16 +8,19 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+
+import java.util.Collection;
 
 public class SearchResultsActivity extends AppCompatActivity
 {
     private SwipeRefreshLayout searchSwipeLayout;
     private RecyclerView searchResultsRecycler;
-    private SelectableRecyclerAdapter recyclerAdapter;
+    private SimpleRecyclerAdapter recyclerAdapter;
     private LinearLayoutManager layoutManager;
     private String category;
     private String keyWords;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,11 +33,20 @@ public class SearchResultsActivity extends AppCompatActivity
         bar.setDisplayShowTitleEnabled(false);
 
         runSearchResultsRecycler();
-        showRecyclerItems();
+        showRecyclerItems(AppManager.getInstance().getSearchResults());
 
         Intent intent = getIntent();
         category = intent.getStringExtra("category");
         keyWords = intent.getStringExtra("keyWords");
+
+        AppManager.getInstance().getMainActivity().setCurrentSearchScreen(this);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        AppManager.getInstance().getMainActivity().setCurrentSearchScreen(null);
     }
 
     @Override
@@ -58,7 +70,8 @@ public class SearchResultsActivity extends AppCompatActivity
             }
         });
 
-        searchSwipeLayout.setColorSchemeResources(
+        searchSwipeLayout.setColorSchemeResources
+                (
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -67,7 +80,7 @@ public class SearchResultsActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         searchResultsRecycler.setLayoutManager(layoutManager);
 
-        recyclerAdapter = new SelectableRecyclerAdapter();
+        recyclerAdapter = new SimpleRecyclerAdapter();
         searchResultsRecycler.setAdapter(recyclerAdapter);
 
         RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener()
@@ -86,17 +99,42 @@ public class SearchResultsActivity extends AppCompatActivity
                 }
             }
         };
-        searchResultsRecycler.setOnScrollListener(scrollListener);
+        searchResultsRecycler.setOnScrollListener(scrollListener);}
 
-        AppManager.getInstance().setCurrentSearchLayout(searchSwipeLayout);
-        AppManager.getInstance().setCurrentRecyclerAdapter(recyclerAdapter);
-    }
-
-    private void showRecyclerItems()
+    public void showProgressBar(String type, boolean show)
     {
-        recyclerAdapter.clearItems();
-        recyclerAdapter.setItems(AppManager.getInstance().getSearchResults());
+        switch (type)
+        {
+            case "pagination" :
+            ProgressBar progressBar = findViewById(R.id.pagination_loading);
+            if(show)
+            {
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.getLayoutParams().height= progressBar.getWidth();
+                progressBar.requestLayout();
+            }
+            else
+                {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar.getLayoutParams().height = 0;
+                    progressBar.requestLayout();
+                }
+            break;
+
+            case "refresh" :
+                if(show){ searchSwipeLayout.setRefreshing(true);}
+                else{searchSwipeLayout.setRefreshing(false);}
+            break;
+        }
     }
 
+    protected void showRecyclerItems(Collection<RecyclerItemData> recyclerItems)
+    {
+        recyclerAdapter.setItems(recyclerItems);
+    }
+
+    public SwipeRefreshLayout getSearchSwipeLayout() {
+        return searchSwipeLayout;
+    }
 }
 

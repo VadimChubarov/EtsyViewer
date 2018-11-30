@@ -61,7 +61,7 @@ public class FavoritesTabFragment extends Fragment
         recyclerAdapter = new SelectableRecyclerAdapter();
         recyclerAdapter.setSelectionColor("#33c43c00");
         favoritesRecycler.setAdapter(recyclerAdapter);
-        new RecyclerAnimator().setDeleteAnimationSpeed(favoritesRecycler,500);
+        new RecyclerAnimator().setDeleteAnimationSpeed(favoritesRecycler,250);
     }
 
     public void showRecyclerItems()

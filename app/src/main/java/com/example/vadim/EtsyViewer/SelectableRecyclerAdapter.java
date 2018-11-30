@@ -40,7 +40,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
                 itemCheckbox.setChecked(false,animation);
 
                 OnDelayTaskWithUI onDelayTaskWithUI = new OnDelayTaskWithUI();
-                onDelayTaskWithUI.setDelay(400);
+                onDelayTaskWithUI.setDelay(300);
                 onDelayTaskWithUI.setView(itemCheckbox);
                 onDelayTaskWithUI.execute();
             }

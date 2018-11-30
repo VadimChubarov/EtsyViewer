@@ -1,6 +1,4 @@
 package com.example.vadim.EtsyViewer;
-
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -13,8 +11,6 @@ public class AppManager implements MainInterface.Presenter
     private static AppManager appManager;
     private AppListener appListener;
     private ArrayList<RecyclerItemData> searchResults;
-    private SwipeRefreshLayout currentSearchLayout;
-    private SelectableRecyclerAdapter currentRecyclerAdapter;
 
         private AppManager(MainActivity mainActivity)
         {
@@ -48,15 +44,6 @@ public class AppManager implements MainInterface.Presenter
     public AppListener getAppListener() {return appListener;}
 
     public ArrayList<RecyclerItemData> getSearchResults() {return searchResults;}
-
-    public void setCurrentSearchLayout(SwipeRefreshLayout currentSearchLayout) {this.currentSearchLayout = currentSearchLayout;}
-
-    public SwipeRefreshLayout getCurrentSearchLayout() {return currentSearchLayout;}
-
-    public SelectableRecyclerAdapter getCurrentRecyclerAdapter() {return currentRecyclerAdapter;}
-
-    public void setCurrentRecyclerAdapter(SelectableRecyclerAdapter currentRecyclerAdapter) {this.currentRecyclerAdapter = currentRecyclerAdapter;}
-
 
     public RecyclerItemData getSearchResultsItem (int listingId)
     {
@@ -98,6 +85,7 @@ public class AppManager implements MainInterface.Presenter
     public void refreshListOfSearchResults(String category, String keyWords)
     {
         if(coreProcess.isReadyForSearch()){new ApiRequestManager().execute("Refresh",category,keyWords);}
+        else{mainActivity.getCurrentSearchScreen().showProgressBar("refresh",false);}
     }
 
     public void createNextPageOfSearchResults(String category, String keywords)
@@ -106,6 +94,7 @@ public class AppManager implements MainInterface.Presenter
         {
             String nextPage = String.valueOf(coreProcess.getNextListingPage());
             new ApiRequestManager().execute("Pagination",category,keywords,nextPage);
+            mainActivity.getCurrentSearchScreen().showProgressBar("pagination",true);
         }
     }
 
@@ -141,8 +130,6 @@ public class AppManager implements MainInterface.Presenter
             deleteListing(item.getListingId());
         }
     }
-
-
 
     public class AppListener implements View.OnClickListener
     {

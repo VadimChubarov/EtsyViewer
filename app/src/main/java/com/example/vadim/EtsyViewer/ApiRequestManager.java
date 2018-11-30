@@ -1,17 +1,11 @@
 package com.example.vadim.EtsyViewer;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 public class ApiRequestManager extends AsyncTask<String,Void,String[]>
 {
     private String responseType;
     private int [] listingsId;
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
 
     @Override
     protected String[] doInBackground(String... requestParams) {
@@ -98,20 +92,13 @@ public class ApiRequestManager extends AsyncTask<String,Void,String[]>
                 break;
 
             case "Refresh":
-                AppManager.getInstance().getCurrentRecyclerAdapter().clearItems();
-                AppManager.getInstance().getCurrentRecyclerAdapter().setItems(AppManager.getInstance().getSearchResults());
-                AppManager.getInstance().getCurrentSearchLayout().setRefreshing(false);
-
-                Toast toastRefresh = Toast.makeText(AppManager.getInstance().getMainActivity(),"Items refreshed", Toast.LENGTH_SHORT);
-                toastRefresh.show();
+                AppManager.getInstance().getMainActivity().getCurrentSearchScreen().showRecyclerItems(AppManager.getInstance().getSearchResults());
+                AppManager.getInstance().getMainActivity().getCurrentSearchScreen().showProgressBar("refresh",false);
                 break;
 
             case "Pagination":
-                AppManager.getInstance().getCurrentRecyclerAdapter().clearItems();
-                AppManager.getInstance().getCurrentRecyclerAdapter().setItems(AppManager.getInstance().getSearchResults());
-
-                Toast toastPagination = Toast.makeText(AppManager.getInstance().getMainActivity(),"Next page loaded", Toast.LENGTH_SHORT);
-                toastPagination.show();
+                AppManager.getInstance().getMainActivity().getCurrentSearchScreen().showRecyclerItems(AppManager.getInstance().getSearchResults());
+                AppManager.getInstance().getMainActivity().getCurrentSearchScreen().showProgressBar("pagination",false);
                 break;
         }
     }

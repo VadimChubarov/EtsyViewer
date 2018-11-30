@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity implements MainInterface.View
 {
     private SerachTabFragment searchTabFragment;
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     private ProgressDialog progressDialog;
     private Intent searchResultsIntent;
     private Intent itemDetailsIntent;
+    private WeakReference<SearchResultsActivity> currentSearchScreenRef;
 
 
     @Override
@@ -108,6 +111,15 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     {
         itemDetailsIntent.putExtra("id",listingId);
         startActivity(itemDetailsIntent);
+    }
+
+    public SearchResultsActivity getCurrentSearchScreen() {
+        return currentSearchScreenRef.get();
+    }
+
+    public void setCurrentSearchScreen(SearchResultsActivity currentSearchScreen)
+    {   if(currentSearchScreen!=null){this.currentSearchScreenRef = new WeakReference<>(currentSearchScreen);}
+        else{this.currentSearchScreenRef.clear();}
     }
 }
 
