@@ -12,6 +12,7 @@
                android:layout_marginRight="20dp"
                android:layout_centerVertical="true"
                android:scaleType="centerCrop"
+               android:background="@drawable/image_loading1"
                android:id="@+id/recyclerImage"/>
 
     <TextView android:layout_width="match_parent"

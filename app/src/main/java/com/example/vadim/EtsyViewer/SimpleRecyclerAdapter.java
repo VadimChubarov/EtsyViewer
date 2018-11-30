@@ -58,7 +58,6 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         public RecyclerViewHolder(View itemView)
         {
             super(itemView);
-
             recyclerImage = itemView.findViewById(R.id.recyclerImage);
             recyclerText = itemView.findViewById(R.id.recyclerText);
         }
