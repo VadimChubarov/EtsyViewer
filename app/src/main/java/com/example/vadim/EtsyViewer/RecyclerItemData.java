@@ -1,25 +1,29 @@
 package com.example.vadim.EtsyViewer;
 
 
+import java.util.Arrays;
+
 public class RecyclerItemData
 {
-    boolean isSelected;
+    private boolean isSelected;
     private int listingId;
     private String header;
     private String description;
     private String imageURL;
-    private String pictureURL;
+    private String [] pictureURL;
     private String price;
+    private String currency;
 
 
-    public RecyclerItemData(int listingId ,String header, String description, String imageURL, String pictureURL, String price)
+    public RecyclerItemData(int listingId ,String header, String description, String imageURL, String[] picturesURL, String price, String currency)
     {
         this.listingId = listingId;
         this.header = header;
         this.description = description;
         this.imageURL = imageURL;
-        this.pictureURL = pictureURL;
-        this.price = "$ "+price;
+        this.pictureURL = picturesURL;
+        this.price = price;
+        this.currency = currency;
 
     }
 
@@ -59,16 +63,16 @@ public class RecyclerItemData
         this.description = description;
     }
 
-    public String getPictureURL() {
+    public String[] getPictureURL() {
         return pictureURL;
     }
 
-    public void setPictureURL(String pictureURL) {
+    public void setPictureURL(String []pictureURL) {
         this.pictureURL = pictureURL;
     }
 
     public String getPrice() {
-        return price;
+        return currency+" "+price;
     }
 
     public void setPrice(String price) {
@@ -82,22 +86,27 @@ public class RecyclerItemData
 
         RecyclerItemData that = (RecyclerItemData) o;
 
+        if (isSelected != that.isSelected) return false;
         if (listingId != that.listingId) return false;
         if (!header.equals(that.header)) return false;
         if (!description.equals(that.description)) return false;
         if (!imageURL.equals(that.imageURL)) return false;
-        if (!pictureURL.equals(that.pictureURL)) return false;
-        return price.equals(that.price);
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(pictureURL, that.pictureURL)) return false;
+        if (!price.equals(that.price)) return false;
+        return currency.equals(that.currency);
     }
 
     @Override
     public int hashCode() {
-        int result = listingId;
+        int result = (isSelected ? 1 : 0);
+        result = 31 * result + listingId;
         result = 31 * result + header.hashCode();
         result = 31 * result + description.hashCode();
         result = 31 * result + imageURL.hashCode();
-        result = 31 * result + pictureURL.hashCode();
+        result = 31 * result + Arrays.hashCode(pictureURL);
         result = 31 * result + price.hashCode();
+        result = 31 * result + currency.hashCode();
         return result;
     }
 }

@@ -164,18 +164,26 @@ public class CoreProcess implements MainInterface.Model
         String header = listingItem.getTitle();
         String description = listingItem.getDescription();
         String price = listingItem.getPrice();
+        String currency = listingItem.getCurrencyCode();
         String listingImageURL = "";
-        String listingPictureURL = "";
+        String [] listingPicturesURL = new String[4];
 
         for(ListingImage listingImage : currentListingImagesResponse)
         {
           if (listingImage.getResults().get(0).getListingId() == listingId)
           {
               listingImageURL = listingImage.getResults().get(0).getUrl170x135();
-              listingPictureURL = listingImage.getResults().get(0).getUrlFullxfull();
+
+              int picturesQty = listingImage.getResults().size();
+              if(picturesQty>listingPicturesURL.length){picturesQty = listingPicturesURL.length;}
+
+              for(int i = 0; i < picturesQty; i++)
+              {
+                  listingPicturesURL[i] = listingImage.getResults().get(i).getUrlFullxfull();
+              }
           }
         }
-        return new RecyclerItemData(listingId,header,description,listingImageURL,listingPictureURL,price);
+        return new RecyclerItemData(listingId,header,description,listingImageURL,listingPicturesURL,price,currency);
     }
 
     public boolean isListingSaved(int listingId)
