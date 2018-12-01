@@ -10,38 +10,33 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.RecyclerViewHolder>
-{
+public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.RecyclerViewHolder> {
     private List<RecyclerItemData> recyclerItemDataList = new ArrayList<>();
 
-    public void setItems(Collection<RecyclerItemData> recyclerItems)
-    {
+    public void setItems(Collection<RecyclerItemData> recyclerItems) {
         clearItems();
         recyclerItemDataList.addAll(recyclerItems);
         notifyDataSetChanged();
     }
 
-    public void clearItems()
-    {
+    public void clearItems() {
         recyclerItemDataList.clear();
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public SimpleRecyclerAdapter.RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
-    {
+    public SimpleRecyclerAdapter.RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_item_layout, viewGroup, false);
         return new RecyclerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i)
-    {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i) {
         recyclerViewHolder.bind(recyclerItemDataList.get(i));
-         SimpleRecyclerAdapter.OnItemClickListener onItemClickListener = new OnItemClickListener(i);
-         recyclerViewHolder.itemView.setOnClickListener(onItemClickListener);
+        SimpleRecyclerAdapter.OnItemClickListener onItemClickListener = new OnItemClickListener(i);
+        recyclerViewHolder.itemView.setOnClickListener(onItemClickListener);
     }
 
     @Override
@@ -50,31 +45,26 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
     }
 
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder
-    {
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private ImageView recyclerImage;
         private TextView recyclerText;
 
-        public RecyclerViewHolder(View itemView)
-        {
+        public RecyclerViewHolder(View itemView) {
             super(itemView);
             recyclerImage = itemView.findViewById(R.id.recyclerImage);
             recyclerText = itemView.findViewById(R.id.recyclerText);
         }
 
-        public void bind(RecyclerItemData recyclerItemData)
-        {
-              recyclerText.setText(recyclerItemData.getHeader());
-              Picasso.with(itemView.getContext()).load(recyclerItemData.getImageURL()).into(recyclerImage);
+        public void bind(RecyclerItemData recyclerItemData) {
+            recyclerText.setText(recyclerItemData.getHeader());
+            Picasso.with(itemView.getContext()).load(recyclerItemData.getImageURL()).into(recyclerImage);
         }
     }
 
-    private class OnItemClickListener implements View.OnClickListener
-    {
+    private class OnItemClickListener implements View.OnClickListener {
         private int position;
 
-        public OnItemClickListener(int position)
-        {
+        public OnItemClickListener(int position) {
             this.position = position;
         }
 
@@ -82,7 +72,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         public void onClick(View v)
         {
             int listingId = recyclerItemDataList.get(position).getListingId();
-            AppManager.getInstance().getMainActivity().showItemDetailsScreen(listingId);
+            AppManager.getInstance().createDetailedScreen(listingId);
         }
     }
 }

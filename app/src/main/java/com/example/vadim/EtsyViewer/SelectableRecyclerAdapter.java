@@ -62,11 +62,14 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
    {
        for (int i = 0; i < recyclerItemDataList.size();i++)
        {
-           if(recyclerItemDataList.get(i).isSelected()){recyclerItemDataList.remove(i);i--;}
-           notifyItemRemoved(i);
-           notifyItemRangeChanged(0,getItemCount());
+           if(recyclerItemDataList.get(i).isSelected())
+           {
+               recyclerItemDataList.remove(i);
+               notifyItemRemoved(i);
+               i--;
+               notifyItemRangeChanged(0,getItemCount()-1);
+           }
        }
-
    }
 
     public boolean anyItemSelected()
@@ -203,7 +206,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
                 else
                     {
                         int listingId = recyclerItemDataList.get(position).getListingId();
-                        AppManager.getInstance().getMainActivity().showItemDetailsScreen(listingId);
+                        AppManager.getInstance().createDetailedScreen(listingId);
                     }
             }
 
