@@ -16,6 +16,7 @@
   
 - сохранение товаров в "избранное"/ выбор и удаление
 
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen7.png" width="200"/>
   <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen6.png" width="200"/>
   
   Навигация и просмотр товаров выполнены с помощью ToolBar/ViewPager, RecyclerView+swipe to refresh/pagination,
