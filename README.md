@@ -14,7 +14,7 @@
   <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen5.png" width="200"/>
   <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen3.png" width="200"/>
   
-- сохранение товаров в "избранное" 
+- сохранение товаров в "избранное"/ выбор и удаление
 
   <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen6.png" width="200"/>
   
