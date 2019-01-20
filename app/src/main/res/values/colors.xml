@@ -5,4 +5,7 @@
     <color name="colorAccent">#c43c00</color>
     <color name="spinnerTextColor">#c43c00</color>
     <color name="spinnerBackground">#ffff</color>
+    <color name="transparent_black">#66000000</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

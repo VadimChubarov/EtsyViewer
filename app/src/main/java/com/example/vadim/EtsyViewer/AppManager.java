@@ -1,4 +1,7 @@
 package com.example.vadim.EtsyViewer;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -137,17 +140,29 @@ public class AppManager implements MainInterface.Presenter
         public void onClick(View v)
         {
             switch (v.getId())
-                   {
-                       case R.id.submit: if(coreProcess.isReadyForSearch()) {createListOfSearchResults();}break;
+            {
+                case R.id.submit:
+                    if (coreProcess.isReadyForSearch()) {
+                        createListOfSearchResults();
+                    }
+                    break;
 
-                       case R.id.SaveItemButton:
+                case R.id.SaveItemButton:
 
-                           int listingId = mainActivity.getItemDetailsIntent().getIntExtra("id",0);
-                           saveListing(getSearchResultsItem(listingId));
+                    int listingId = mainActivity.getItemDetailsIntent().getIntExtra("id", 0);
+                    saveListing(getSearchResultsItem(listingId));
 
-                           Toast toast = Toast.makeText(mainActivity,"Item saved", Toast.LENGTH_SHORT);
-                           toast.show();
-                   }
+                    Toast toast = Toast.makeText(mainActivity, "Item saved", Toast.LENGTH_SHORT);
+                    toast.show();
+            }
+        }
+
+        public void onPictureClick(int pictureId, RecyclerItemData picturesData)
+        {mainActivity.showFullScreen(pictureId,picturesData);}
+
+        public void onDownloadPictureClick(Drawable picture, String pictureName) {
+            Bitmap pictureBitmap = ((BitmapDrawable)picture).getBitmap();
+            new ImageStorageManager().savePicture(pictureBitmap,pictureName,"Etsy_Viewer_Pictures");
         }
     }
 }

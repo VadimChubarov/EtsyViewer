@@ -1,9 +1,12 @@
 package com.example.vadim.EtsyViewer;
 
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
-public class RecyclerItemData
+public class RecyclerItemData implements Serializable
 {
     private boolean isSelected;
     private int listingId;
@@ -11,17 +14,29 @@ public class RecyclerItemData
     private String description;
     private String imageURL;
     private String [] pictureURL;
+    private ArrayList<String> fullscreenURL;
+    private ArrayList<Integer> fullscreenId;
     private String price;
     private String currency;
 
 
-    public RecyclerItemData(int listingId ,String header, String description, String imageURL, String[] picturesURL, String price, String currency)
+    public RecyclerItemData(int listingId ,
+                            String header,
+                            String description,
+                            String imageURL,
+                            String[] picturesURL,
+                            ArrayList<String> fullScreenURL,
+                            ArrayList<Integer> fullscreenId,
+                            String price,
+                            String currency)
     {
         this.listingId = listingId;
         this.header = header;
         this.description = description;
         this.imageURL = imageURL;
         this.pictureURL = picturesURL;
+        this.fullscreenURL = fullScreenURL;
+        this.fullscreenId = fullscreenId;
         this.price = price;
         this.currency = currency;
 
@@ -71,6 +86,30 @@ public class RecyclerItemData
         this.pictureURL = pictureURL;
     }
 
+    public ArrayList<String> getFullscreenURL() {
+        return fullscreenURL;
+    }
+
+    public void setFullscreenURL(ArrayList<String> fullscreenURL) {
+        this.fullscreenURL = fullscreenURL;
+    }
+
+    public ArrayList<Integer> getFullscreenId() {
+        return fullscreenId;
+    }
+
+    public void setFullscrenId(ArrayList<Integer> fullscrenId) {
+        this.fullscreenId = fullscrenId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public String getPrice() {
         return currency+" "+price;
     }
@@ -83,30 +122,24 @@ public class RecyclerItemData
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         RecyclerItemData that = (RecyclerItemData) o;
-
-        if (isSelected != that.isSelected) return false;
-        if (listingId != that.listingId) return false;
-        if (!header.equals(that.header)) return false;
-        if (!description.equals(that.description)) return false;
-        if (!imageURL.equals(that.imageURL)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(pictureURL, that.pictureURL)) return false;
-        if (!price.equals(that.price)) return false;
-        return currency.equals(that.currency);
+        return isSelected == that.isSelected &&
+                listingId == that.listingId &&
+                Objects.equals(header, that.header) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(imageURL, that.imageURL) &&
+                Arrays.equals(pictureURL, that.pictureURL) &&
+                Objects.equals(fullscreenURL, that.fullscreenURL) &&
+                Objects.equals(fullscreenId, that.fullscreenId) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(currency, that.currency);
     }
 
     @Override
     public int hashCode() {
-        int result = (isSelected ? 1 : 0);
-        result = 31 * result + listingId;
-        result = 31 * result + header.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + imageURL.hashCode();
+
+        int result = Objects.hash(isSelected, listingId, header, description, imageURL, fullscreenURL, fullscreenId, price, currency);
         result = 31 * result + Arrays.hashCode(pictureURL);
-        result = 31 * result + price.hashCode();
-        result = 31 * result + currency.hashCode();
         return result;
     }
 }

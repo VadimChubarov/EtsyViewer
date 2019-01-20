@@ -167,6 +167,9 @@ public class CoreProcess implements MainInterface.Model
         String currency = listingItem.getCurrencyCode();
         String listingImageURL = "";
         String [] listingPicturesURL = new String[4];
+        ArrayList<String> listingFullScreenURL = new ArrayList<>();
+        ArrayList<Integer> listingFullScreenId = new ArrayList<>();
+
 
         for(ListingImage listingImage : currentListingImagesResponse)
         {
@@ -179,11 +182,25 @@ public class CoreProcess implements MainInterface.Model
 
               for(int i = 0; i < picturesQty; i++)
               {
-                  listingPicturesURL[i] = listingImage.getResults().get(i).getUrlFullxfull();
+                  listingPicturesURL[i] = listingImage.getResults().get(i).getUrl570xN();
+              }
+              for(ListingImage.ListingImageItem imageItem  : listingImage.getResults())
+              {
+                 listingFullScreenURL.add(imageItem.getUrl570xN());
+                 listingFullScreenId.add(imageItem.getListingImageId());
               }
           }
         }
-        return new RecyclerItemData(listingId,header,description,listingImageURL,listingPicturesURL,price,currency);
+        return new RecyclerItemData(
+                listingId,
+                header,
+                description,
+                listingImageURL,
+                listingPicturesURL,
+                listingFullScreenURL,
+                listingFullScreenId,
+                price,
+                currency);
     }
 
     public boolean isListingSaved(int listingId)

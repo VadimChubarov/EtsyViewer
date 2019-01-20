@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
-
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity implements MainInterface.View
@@ -18,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     private ProgressDialog progressDialog;
     private Intent searchResultsIntent;
     private Intent itemDetailsIntent;
+    private Intent fullScreenIntent;
     private WeakReference<SearchResultsActivity> currentSearchScreenRef;
 
 
@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
         searchResultsIntent = new Intent(this,SearchResultsActivity.class);
         itemDetailsIntent = new Intent(this,ItemDetailsActivity.class);
+        fullScreenIntent = new Intent(this,FullscreenActivity.class);
+
         progressDialog = LoadingDialogManager.getProgressDialog("Loading...",false,this);
 
         AppManager appManager = AppManager.getInstance(this);
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
     public Intent getItemDetailsIntent() {return itemDetailsIntent;}
 
+    public Intent getFullScreenIntent() {return fullScreenIntent;}
+
     public void showCategories(String[] categories)
     {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(MainActivity.this,R.layout.spinner_item_selected,categories);
@@ -113,9 +117,13 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         startActivity(itemDetailsIntent);
     }
 
-    public SearchResultsActivity getCurrentSearchScreen() {
-        return currentSearchScreenRef.get();
+    public void showFullScreen(int pictureId, RecyclerItemData picturesData) {
+        fullScreenIntent.putExtra("pictureId",pictureId);
+        fullScreenIntent.putExtra("picturesData",picturesData);
+        startActivity(fullScreenIntent);
     }
+
+    public SearchResultsActivity getCurrentSearchScreen() {return currentSearchScreenRef.get();}
 
     public void setCurrentSearchScreen(SearchResultsActivity currentSearchScreen)
     {   if(currentSearchScreen!=null){this.currentSearchScreenRef = new WeakReference<>(currentSearchScreen);}

@@ -10,6 +10,7 @@
         <item name="android:actionModeBackground">@color/colorPrimary</item>
         <item name="actionBarSize">72dp</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -33,5 +34,10 @@
 
     <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme.NoActionBar">
+        <item name="android:statusBarColor">@color/transparent_black</item>
+        <item name="android:navigationBarColor">@color/transparent_black</item>
     </style>
 </resources>
