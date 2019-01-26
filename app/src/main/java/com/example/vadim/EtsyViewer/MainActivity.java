@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import java.lang.ref.WeakReference;
 
@@ -22,12 +21,10 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createToolbar();
-        createViewPager();
+        createTabViewPager();
 
         searchResultsIntent = new Intent(this,SearchResultsActivity.class);
         itemDetailsIntent = new Intent(this,ItemDetailsActivity.class);
@@ -40,36 +37,25 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
         AppManager.onDestroy();
     }
 
-    private void createToolbar()
-    {
-       Toolbar toolbar =  findViewById(R.id.toolbar);
-       setSupportActionBar(toolbar);
-       getSupportActionBar().hide();
-    }
-
-    private void createViewPager()
-    {
+    private void createTabViewPager() {
         searchTabFragment = new SerachTabFragment();
         favoritesTabFragment = new FavoritesTabFragment();
 
-        ViewPager viewPager = findViewById(R.id.viewpager);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPager tabViewPager = findViewById(R.id.viewpager);
+        TabViewPagerAdapter tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager(),this);
+        tabViewPagerAdapter.addFragment(searchTabFragment,"Find products",R.drawable.magnifying_glass1);
+        tabViewPagerAdapter.addFragment(favoritesTabFragment, "Favorites",R.drawable.star1);
+        tabViewPager.setAdapter(tabViewPagerAdapter);
 
-        adapter.addFragment(searchTabFragment,"Find products");
-        adapter.addFragment(favoritesTabFragment, "Favorites");
-
-        viewPager.setAdapter(adapter);
         TabLayout tabLayout =  findViewById(R.id.tablayout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        tabLayout.getTabAt(0).setIcon(R.drawable.magnifying_glass1);
-        tabLayout.getTabAt(1).setIcon(R.drawable.star1);
+        tabLayout.setupWithViewPager(tabViewPager);
+        tabLayout.getTabAt(0).setCustomView(tabViewPagerAdapter.getTabView(0));
+        tabLayout.getTabAt(1).setCustomView(tabViewPagerAdapter.getTabView(1));
     }
 
     public void showLoadingDialog(boolean show)

@@ -125,8 +125,7 @@ public class FullscreenActivity extends AppCompatActivity
         hideHandler.postDelayed(showUIwithDelay, delay);
     }
 
-    private class TouchImageAdapter extends PagerAdapter
-    {
+    private class TouchImageAdapter extends PagerAdapter {
         private TouchImageView [] images;
         private int [] imagesId;
 
@@ -171,8 +170,7 @@ public class FullscreenActivity extends AppCompatActivity
         }
     }
 
-    private class ToolbarClickListener implements View.OnClickListener
-    {
+    private class ToolbarClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
