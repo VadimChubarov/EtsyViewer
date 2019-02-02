@@ -14,24 +14,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class FullscreenActivity extends AppCompatActivity
-{
+public class FullscreenActivity extends AppCompatActivity {
+
     private boolean isUIvisible;
-    private final Handler hideHandler = new Handler();
     private ExtendedViewPager screenContent;
     private TouchImageAdapter fullScreenAdapter;
+    int pictureId;
+    private RecyclerItemData currentItem;
+    private final Handler navigationBarToggle = new Handler();
 
-    private final Runnable hideUIwithDelay = new Runnable()
-    {
+    private final Runnable hideUI = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
-        public void run()
-        {
+        public void run() {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {actionBar.hide();}
-
             screenContent.setSystemUiVisibility
                      (View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -43,16 +44,12 @@ public class FullscreenActivity extends AppCompatActivity
         }
     };
 
-    private final Runnable showUIwithDelay = new Runnable()
-    {
-
+    private final Runnable showUI = new Runnable() {
         @Override
-        public void run()
-        {
+        public void run() {
             screenContent.setSystemUiVisibility
                     ( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {actionBar.show();}
             isUIvisible = true;
@@ -60,48 +57,51 @@ public class FullscreenActivity extends AppCompatActivity
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen);
 
-        TextView toolbarHeader = findViewById(R.id.fullscreen_toolbar_header);
-        Button toolbarBackButton = findViewById(R.id.fullscren_toolbar_back);
-        Button toobarDownloadButton = findViewById(R.id.fullscren_toolbar_download);
-        Toolbar toolbar = findViewById(R.id.fullscreen_toolbar);
-        screenContent = findViewById(R.id.full_screen_content);
+        receiveActivityData();
+        setUpToolbar();
+        setUpFullScreenContent();
+        showUI(0);
+    }
 
-        setSupportActionBar(toolbar);showUI(0);
+   private void receiveActivityData() {
+       Intent intent = getIntent();
+       pictureId = intent.getIntExtra("pictureId",0);
+       currentItem = (RecyclerItemData) intent.getSerializableExtra("picturesData");
+   }
 
-        Intent intent = getIntent();
-        int pictureId = intent.getIntExtra("pictureId",0);
-        RecyclerItemData picturesData = (RecyclerItemData) intent.getSerializableExtra("picturesData");
+   private void setUpToolbar(){
+       TextView toolbarHeader = findViewById(R.id.fullscreen_toolbar_header);
+       Button toolbarBackButton = findViewById(R.id.fullscren_toolbar_back);
+       Button toobarDownloadButton = findViewById(R.id.fullscren_toolbar_download);
+       Toolbar toolbar = findViewById(R.id.fullscreen_toolbar);
 
-        TouchImageView[] fullScreenImages = new TouchImageView[picturesData.getFullscreenURL().size()];
-        int[] picturesId = new int [picturesData.getFullscreenId().size()];
+       toolbarHeader.setText(currentItem.getHeader());
 
-        for (int i = 0; i < fullScreenImages.length; i++) {
-            TouchImageView touchImageView = new TouchImageView(this);
-            Picasso.with(this).load(picturesData.getFullscreenURL().get(i)).into(touchImageView);
-            touchImageView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view) {toggle();}
-            });
+       ToolbarListener toolbarListener = new ToolbarListener();
+       toolbarBackButton.setOnClickListener(toolbarListener);
+       toobarDownloadButton.setOnClickListener(toolbarListener);
 
-            fullScreenImages[i] = touchImageView;
-            picturesId[i] = picturesData.getFullscreenId().get(i);
-        }
-        fullScreenAdapter = new TouchImageAdapter(fullScreenImages,picturesId);
-        screenContent.setAdapter(fullScreenAdapter);
-        screenContent.setCurrentItem(pictureId);
+       setSupportActionBar(toolbar);
+   }
 
-        toolbarHeader.setText(picturesData.getHeader());
+   private void setUpFullScreenContent(){
+       List<TouchImageView> fullScreenImages = new ArrayList<>();
+       for(String pictureURL : currentItem.getFullscreenURL()){
+           TouchImageView touchImageView = new TouchImageView(this);
+           touchImageView.setOnClickListener( view -> {toggle();});
+           Picasso.with(this).load(pictureURL).into(touchImageView);
+           fullScreenImages.add(touchImageView);
+       }
 
-        ToolbarClickListener toolbarClickListener = new ToolbarClickListener();
-        toolbarBackButton.setOnClickListener(toolbarClickListener);
-        toobarDownloadButton.setOnClickListener(toolbarClickListener);
-}
+       fullScreenAdapter = new TouchImageAdapter(fullScreenImages,currentItem.getFullscreenId());
+       screenContent = findViewById(R.id.full_screen_content);
+       screenContent.setAdapter(fullScreenAdapter);
+       screenContent.setCurrentItem(pictureId);
+   }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState){
@@ -115,48 +115,46 @@ public class FullscreenActivity extends AppCompatActivity
     }
 
     private void hideUI(int delay) {
-        hideHandler.removeCallbacks(hideUIwithDelay);
-        hideHandler.postDelayed(hideUIwithDelay, delay);
+        navigationBarToggle.removeCallbacks(hideUI);
+        navigationBarToggle.postDelayed(hideUI, delay);
     }
 
     @SuppressLint("InlinedApi")
     private void showUI( int delay) {
-        hideHandler.removeCallbacks(showUIwithDelay);
-        hideHandler.postDelayed(showUIwithDelay, delay);
+        navigationBarToggle.removeCallbacks(showUI);
+        navigationBarToggle.postDelayed(showUI, delay);
     }
 
+
     private class TouchImageAdapter extends PagerAdapter {
-        private TouchImageView [] images;
-        private int [] imagesId;
+        private List <TouchImageView> images;
+        private List<Integer> imagesId;
 
         public Drawable getImage(int position) {
-            return images[position].getDrawable();
+            return images.get(position).getDrawable();
         }
 
-        public int getImageId(int position) {return imagesId[position];}
+        public int getImageId(int position) {return imagesId.get(position);}
 
-        public TouchImageAdapter(TouchImageView [] images, int [] imagesId)
-        {
+        public TouchImageAdapter(List<TouchImageView> images, List<Integer> imagesId) {
             this.images = images;
             this.imagesId = imagesId;
         }
 
-        public void resetAllZoom()
-        {
+        public void resetAllZoom() {
             for(TouchImageView image : images){image.resetZoom();}
         }
 
         @Override
         public int getCount() {
-            return images.length;
+            return images.size();
         }
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
             resetAllZoom();
-            container.addView(images[position], ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            return images[position];
-
+            container.addView(images.get(position), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            return images.get(position);
         }
 
         @Override
@@ -170,13 +168,15 @@ public class FullscreenActivity extends AppCompatActivity
         }
     }
 
-    private class ToolbarClickListener implements View.OnClickListener {
+
+    private class ToolbarListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.fullscren_toolbar_back :
-                    FullscreenActivity.this.onBackPressed();
+                    onBackPressed();
                     break;
+
                 case R.id.fullscren_toolbar_download :
                     Drawable picture = fullScreenAdapter.getImage(screenContent.getCurrentItem());
                     String pictureName = "Etsy_picture_"+ fullScreenAdapter.getImageId(screenContent.getCurrentItem());
