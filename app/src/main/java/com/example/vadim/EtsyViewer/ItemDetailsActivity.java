@@ -1,10 +1,9 @@
 package com.example.vadim.EtsyViewer;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
 import com.squareup.picasso.Picasso;
@@ -12,20 +11,26 @@ import com.squareup.picasso.Picasso;
 
 public class ItemDetailsActivity extends AppCompatActivity
 {
+    int listingId;
+    RecyclerItemData currentItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
-        ActionBar bar = getSupportActionBar();
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setDisplayShowTitleEnabled(false);
+
+        Toolbar toolbar = findViewById(R.id.item_details_toolbar);
+        ImageButton backButton = findViewById(R.id.item_details_toolbar_back_arrow);
+        CheckBox favoriteCheckbox = findViewById(R.id.item_details_toolbar_favorites_checkbox);
+        OnToolbarListener onToolbarClickListener = new OnToolbarListener();
+        backButton.setOnClickListener(onToolbarClickListener);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         TextView itemHeader = findViewById(R.id.ItemHeader);
         TextView itemDescription = findViewById(R.id.ItemDescription);
         TextView itemPrice = findViewById(R.id.ItemPrice);
-        Button saveItemButton = findViewById(R.id.SaveItemButton);
         ImageView itemPicture1 = findViewById(R.id.ItemPicture1);
         itemPicture1.setBackgroundResource(R.drawable.image_loading1);
 
@@ -37,12 +42,15 @@ public class ItemDetailsActivity extends AppCompatActivity
         auxPictureParams.setMargins(auxPictureMargin,auxPictureMargin,auxPictureMargin,auxPictureMargin);
 
         Intent intent = getIntent();
-        int listingId = intent.getIntExtra("id",0);
-        RecyclerItemData currentItem = AppManager.getInstance().getSearchResultsItem(listingId);
+        listingId = intent.getIntExtra("id",0);
+        currentItem = AppManager.getInstance().getSearchResultsItem(listingId);
 
-        if(currentItem==null){currentItem = AppManager.getInstance().getSavedItem(listingId); saveItemButton.setVisibility(View.INVISIBLE);}
+        if(AppManager.getInstance().getSavedItem(listingId)!=null){favoriteCheckbox.setChecked(true);}
+        favoriteCheckbox.setOnCheckedChangeListener(onToolbarClickListener);
 
-        saveItemButton.setOnClickListener(AppManager.getInstance().getAppListener());
+       if(currentItem==null){currentItem = AppManager.getInstance().getSavedItem(listingId);}
+
+
         itemPicture1.setOnClickListener(new OnPictureClickListener(0,currentItem));
 
         int previewPicturesQty = currentItem.getPictureURL().length;
@@ -80,13 +88,6 @@ public class ItemDetailsActivity extends AppCompatActivity
         itemPrice.setText(currentItem.getPrice());
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home) {onBackPressed();}
-        return false;
-    }
-
     public class OnPictureClickListener implements View.OnClickListener
     {
         int pictureId;
@@ -99,6 +100,26 @@ public class ItemDetailsActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             AppManager.getInstance().getAppListener().onPictureClick(pictureId,picturesData);
+        }
+    }
+
+    public class OnToolbarListener implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.item_details_toolbar_back_arrow:
+                    onBackPressed();
+                    break;
+            }
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            switch(buttonView.getId()){
+                case R.id.item_details_toolbar_favorites_checkbox:
+                       AppManager.getInstance().getAppListener().onFavoriteListingChecked(currentItem,isChecked);
+                       break;
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ import android.widget.Toast;
 
 public class MessageService {
 
-    public void showMessage(String message) {
+    public static void showMessage(String message) {
         Toast.makeText(AppManager
                 .getInstance()
                 .getMainActivity()

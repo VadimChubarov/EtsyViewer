@@ -3,7 +3,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,23 +145,31 @@ public class AppManager implements MainInterface.Presenter
                         createListOfSearchResults();
                     }
                     break;
-
-                case R.id.SaveItemButton:
-
-                    int listingId = mainActivity.getItemDetailsIntent().getIntExtra("id", 0);
-                    saveListing(getSearchResultsItem(listingId));
-
-                    Toast toast = Toast.makeText(mainActivity, "Item saved", Toast.LENGTH_SHORT);
-                    toast.show();
             }
         }
 
-        public void onPictureClick(int pictureId, RecyclerItemData picturesData)
-        {mainActivity.showFullScreen(pictureId,picturesData);}
+        public void onPictureClick (int pictureId, RecyclerItemData picturesData) {
+            mainActivity.showFullScreen(pictureId,picturesData);}
 
-        public void onDownloadPictureClick(Drawable picture, String pictureName) {
+        public void onDownloadPictureClick (Drawable picture, String pictureName) {
             Bitmap pictureBitmap = ((BitmapDrawable)picture).getBitmap();
             new ImageStorageManager().savePicture(pictureBitmap,pictureName,"Etsy_Viewer_Pictures");
+        }
+
+        public void onFavoriteListingChecked (RecyclerItemData listingItem, boolean isChecked){
+            int listingId = listingItem.getListingId();
+            if(isChecked){
+                if(getSavedItem(listingId)==null) {
+                try{ saveListing(getSearchResultsItem(listingId)); }
+                catch(NullPointerException e){saveListing(listingItem);}
+                MessageService.showMessage("Item added to favorites");
+                }
+                else{ MessageService.showMessage("Item already in favorites"); }
+            }
+            else {
+                deleteListing(listingId);
+                MessageService.showMessage("Item deleted from favorites");
+            }
         }
     }
 }
