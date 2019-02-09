@@ -40,7 +40,7 @@ public class SerachTabFragment extends Fragment
     public void setSpinner(ArrayAdapter<String> adapter)
     {
         DropDownListLimiter listLimiter = new DropDownListLimiter();
-        listLimiter.setMaxDropDownHeight(this.getContext(),spinner,0.7);
+        listLimiter.setMaxDropDownHeight(this.getContext(),spinner,0.5);
         this.spinner.setAdapter(adapter);
     }
 

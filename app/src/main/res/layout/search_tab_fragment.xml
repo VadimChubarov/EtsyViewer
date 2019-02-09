@@ -6,62 +6,62 @@
                 android:id="@+id/fragmentLayout">
 
     <Button
-            android:layout_width="70dp"
-            android:layout_height="40dp"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
             android:textColor="#FFFF"
             android:text="@string/search"
             android:textAllCaps="false"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:elevation="2dp"
             android:backgroundTint="#c43c00"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="62dp"
             android:id="@+id/submit"/>
 
     <ImageView
             android:layout_width="match_parent"
-            android:layout_height="28dp"
-            android:layout_marginTop="106dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="68dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_toLeftOf="@id/submit"
             android:background="@drawable/spinner_frame"/>
 
     <EditText
             android:layout_width="match_parent"
-            android:layout_height="22dp"
-            android:layout_marginTop="109dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:layout_toLeftOf="@id/submit"
             android:background="#FFFF"
             android:hint="@string/enter_keywords"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/colorPrimaryDark"
             android:inputType="text"
             android:drawable="@drawable/spinner_frame"
             android:id="@+id/search_bar1"/>
 
     <ProgressBar
-            android:id="@+id/categories_progress"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="3dp"
-            android:progressDrawable="@drawable/progress"
-            android:layout_toRightOf="@id/category_text"
-            android:layout_alignBottom="@id/category_text"/>
+        android:id="@+id/categories_progress"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/category_text"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp"
+        android:layout_toRightOf="@id/spinner1"
+        android:progressDrawable="@drawable/progress" />
 
     <TextView
             android:textColor="@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/category"
-            android:textSize="14sp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/search_bar1"
             android:padding="5dp"
@@ -70,18 +70,17 @@
     <Spinner
             android:id="@+id/spinner1"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignStart="@id/category_text"
             android:layout_marginBottom="30dp"
             android:background="@drawable/spinner_frame"
             android:padding="5dp"
-            android:layout_toRightOf="@id/category_text"
-            android:layout_below="@id/search_bar1"/>
+            android:layout_below="@id/category_text"/>
 
     <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignRight="@id/spinner1"
             android:layout_alignBottom="@id/spinner1"
             android:src="@drawable/ic_expand_more_black_24dp"
