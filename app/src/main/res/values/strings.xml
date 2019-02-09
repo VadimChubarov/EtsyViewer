@@ -12,6 +12,14 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="add_favorites">Add your favorites here :)</string>
+    <string name="no_search_results">Oops nothing found :( \n Try another keywords</string>
+
+
+
+
+
+
     <string name="long_string">Some Google APIs charge for usage, and you need to enable billing before you can start using these APIs. Enabling billing for the APIs that your projects use also has other advantages:
     Some APIs allow free usage up to a courtesy usage limit, and in some cases this free limit is increased when you enable billing.
     For some APIs, more services are available after you enable billing. For example, when you enable billing for the Google Cloud Platform BigQuery APIs, you can create your own tables; if you do not enable billing,project is billed using the payment method that you specify, and you can change to a different method at any time. You cannot selectively enable billing for some APIs but not others; when you enable billing for a project, it applies to all the APIs that you used within that project, even if the API is currently disabled.</string>

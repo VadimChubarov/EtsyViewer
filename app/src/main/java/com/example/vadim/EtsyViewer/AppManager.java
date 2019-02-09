@@ -119,17 +119,16 @@ public class AppManager implements MainInterface.Presenter
     }
 
     @Override
-    public void deleteListing(int listingId)
-    {
+    public void deleteListing(int listingId) {
         coreProcess.deleteListing(listingId);
-
     }
 
-    public void deleteSelectedListings(List<RecyclerItemData> selectedItems)
-    {
-        for(RecyclerItemData item : selectedItems)
-        {
+    public void deleteSelectedListings(List<RecyclerItemData> selectedItems) {
+        for(RecyclerItemData item : selectedItems) {
             deleteListing(item.getListingId());
+        }
+        if(coreProcess.getAllSavedListings().size() == 0){
+            mainActivity.getFavoritesTabFragment().showAddFavorites(true);
         }
     }
 
@@ -170,6 +169,15 @@ public class AppManager implements MainInterface.Presenter
                 deleteListing(listingId);
                 MessageService.showMessage("Item deleted from favorites");
             }
+        }
+
+        public void onAddFavoritesClick(){
+            mainActivity.getTabLayout().getTabAt(0).select();
+        }
+
+        public void onNoSearchResultsClick(){
+            mainActivity.getCurrentSearchScreen().onBackPressed();
+            mainActivity.getTabLayout().getTabAt(0);
         }
     }
 }

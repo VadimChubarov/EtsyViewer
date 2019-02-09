@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
-        android:id="@+id/favorites_layout" android:orientation="horizontal">
+        android:id="@+id/favorites_layout">
 
     <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
-            android:id="@+id/favorites_recycler">
+            android:id="@+id/favorites_recycler"
+            android:visibility="visible">
     </android.support.v7.widget.RecyclerView>
-</LinearLayout>
+
+   <LinearLayout
+       android:id="@+id/vg_add_favorites_image"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+       android:alpha="0.6"
+       android:orientation="vertical"
+       android:visibility="gone">
+    <ImageView
+        android:id="@+id/favorites_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/ic_favourite"
+        android:layout_gravity="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:text="@string/add_favorites"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -18,6 +18,27 @@
             android:id="@+id/search_recycler">
     </android.support.v7.widget.RecyclerView>
 </android.support.v4.widget.SwipeRefreshLayout>
+    <LinearLayout
+        android:id="@+id/vg_no_search_results_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:alpha="0.6"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/favorites_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/ic_not_found"
+            android:layout_gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            android:text="@string/no_search_results"/>
+    </LinearLayout>
 
     <ProgressBar
             android:id="@+id/pagination_loading"

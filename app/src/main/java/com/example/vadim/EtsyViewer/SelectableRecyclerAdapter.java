@@ -60,10 +60,8 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
 
    public void deleteSelectedItems()
    {
-       for (int i = 0; i < recyclerItemDataList.size();i++)
-       {
-           if(recyclerItemDataList.get(i).isSelected())
-           {
+       for (int i = 0; i < recyclerItemDataList.size();i++) {
+           if(recyclerItemDataList.get(i).isSelected()) {
                recyclerItemDataList.remove(i);
                notifyItemRemoved(i);
                i--;

@@ -11,6 +11,7 @@ import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity implements MainInterface.View
 {
+    private TabLayout tabLayout;
     private SerachTabFragment searchTabFragment;
     private FavoritesTabFragment favoritesTabFragment;
     private ProgressDialog progressDialog;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         tabViewPagerAdapter.addFragment(favoritesTabFragment, "Favorites",R.drawable.star1);
         tabViewPager.setAdapter(tabViewPagerAdapter);
 
-        TabLayout tabLayout =  findViewById(R.id.tablayout);
+        tabLayout =  findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(tabViewPager);
         tabLayout.getTabAt(0).setCustomView(tabViewPagerAdapter.getTabView(0));
         tabLayout.getTabAt(1).setCustomView(tabViewPagerAdapter.getTabView(1));
@@ -68,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     public Intent getItemDetailsIntent() {return itemDetailsIntent;}
 
     public Intent getFullScreenIntent() {return fullScreenIntent;}
+
+    public FavoritesTabFragment getFavoritesTabFragment() {
+        return favoritesTabFragment;
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
 
     public void showCategories(String[] categories)
     {
