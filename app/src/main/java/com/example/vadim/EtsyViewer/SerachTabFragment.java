@@ -5,8 +5,8 @@ import android.view.*;
 import android.widget.*;
 
 
-public class SerachTabFragment extends Fragment
-{
+public class SerachTabFragment extends Fragment {
+
     private Spinner spinner;
     private ImageView spinnerImage;
     private EditText searchBar;
@@ -18,27 +18,23 @@ public class SerachTabFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
-        View myFragmentView = inflater.inflate(R.layout.search_tab_fragment,
-                container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.search_tab_fragment, container, false);
 
-        spinner = myFragmentView.findViewById(R.id.spinner1);
-        spinnerImage = myFragmentView.findViewById(R.id.spinner_image);
-        Button submitButton = myFragmentView.findViewById(R.id.submit);
-        searchBar = myFragmentView.findViewById(R.id.search_bar1);
-        progressBar = myFragmentView.findViewById(R.id.categories_progress);
+        spinner = view.findViewById(R.id.spinner1);
+        spinnerImage = view.findViewById(R.id.spinner_image);
+        Button submitButton = view.findViewById(R.id.submit);
+        searchBar = view.findViewById(R.id.search_bar1);
+        progressBar = view.findViewById(R.id.categories_progress);
 
         if(spinner.getAdapter()==null){showProgressBar(true);}
+        SearchTabClickListener searchTabClickListener = new SearchTabClickListener();
+        submitButton.setOnClickListener(searchTabClickListener);
 
-        submitButton.setOnClickListener(AppManager.getInstance().getAppListener());
-
-        return myFragmentView;
+        return view;
     }
 
-    public void setSpinner(ArrayAdapter<String> adapter)
-    {
+    public void setSpinner(ArrayAdapter<String> adapter) {
         DropDownListLimiter listLimiter = new DropDownListLimiter();
         listLimiter.setMaxDropDownHeight(this.getContext(),spinner,0.5);
         this.spinner.setAdapter(adapter);
@@ -54,13 +50,26 @@ public class SerachTabFragment extends Fragment
         return spinner;
     }
 
-    public void showProgressBar(boolean show)
-    {
-        if (show)
-        {progressBar.setVisibility(View.VISIBLE);
-         spinnerImage.setVisibility(View.INVISIBLE);}
-        else
-            {progressBar.setVisibility(View.INVISIBLE);
-             spinnerImage.setVisibility(View.VISIBLE);}
+    public void showProgressBar(boolean show) {
+        if (show) {
+            progressBar.setVisibility(View.VISIBLE);
+         spinnerImage.setVisibility(View.INVISIBLE);
+        }
+        else {
+                progressBar.setVisibility(View.INVISIBLE);
+             spinnerImage.setVisibility(View.VISIBLE);
+            }
+    }
+
+    private class SearchTabClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId())
+            {
+                case R.id.submit:
+                    AppManager.getInstance().getAppListener().onSearchSubmitClick();
+                    break;
+            }
+        }
     }
 }

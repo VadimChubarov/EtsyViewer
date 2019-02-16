@@ -132,30 +132,24 @@ public class AppManager implements MainInterface.Presenter
         }
     }
 
-    public class AppListener implements View.OnClickListener
+    public class AppListener
     {
-        @Override
-        public void onClick(View v)
-        {
-            switch (v.getId())
-            {
-                case R.id.submit:
-                    if (coreProcess.isReadyForSearch()) {
-                        createListOfSearchResults();
-                    }
-                    break;
+        public void onSearchSubmitClick() {
+            if (coreProcess.isReadyForSearch()) {
+                createListOfSearchResults();
             }
         }
 
         public void onPictureClick (int pictureId, RecyclerItemData picturesData) {
-            mainActivity.showFullScreen(pictureId,picturesData);}
+            mainActivity.showFullScreen(pictureId,picturesData);
+        }
 
         public void onDownloadPictureClick (Drawable picture, String pictureName) {
             Bitmap pictureBitmap = ((BitmapDrawable)picture).getBitmap();
             new ImageStorageManager().savePicture(pictureBitmap,pictureName,"Etsy_Viewer_Pictures");
         }
 
-        public void onFavoriteListingChecked (RecyclerItemData listingItem, boolean isChecked){
+        public void onFavoriteListingChecked (RecyclerItemData listingItem, boolean isChecked) {
             int listingId = listingItem.getListingId();
             if(isChecked){
                 if(getSavedItem(listingId)==null) {
@@ -171,11 +165,11 @@ public class AppManager implements MainInterface.Presenter
             }
         }
 
-        public void onAddFavoritesClick(){
+        public void onAddFavoritesClick() {
             mainActivity.getTabLayout().getTabAt(0).select();
         }
 
-        public void onNoSearchResultsClick(){
+        public void onNoSearchResultsClick() {
             mainActivity.getCurrentSearchScreen().onBackPressed();
             mainActivity.getTabLayout().getTabAt(0);
         }

@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         createTabViewPager();
 
         searchResultsIntent = new Intent(this,SearchResultsActivity.class);
@@ -59,27 +60,25 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         tabLayout.getTabAt(1).setCustomView(tabViewPagerAdapter.getTabView(1));
     }
 
-    public void showLoadingDialog(boolean show)
-    {
+    public void showLoadingDialog(boolean show) {
         if (show)
         {progressDialog.show();}
         else {progressDialog.dismiss();}
     }
 
-    public Intent getItemDetailsIntent() {return itemDetailsIntent;}
+    public Intent getItemDetailsIntent() {
+        return itemDetailsIntent;}
 
-    public Intent getFullScreenIntent() {return fullScreenIntent;}
+    public Intent getFullScreenIntent() {
+        return fullScreenIntent;}
 
-    public FavoritesTabFragment getFavoritesTabFragment() {
-        return favoritesTabFragment;
+    public FavoritesTabFragment getFavoritesTabFragment() {return favoritesTabFragment;
     }
 
-    public TabLayout getTabLayout() {
-        return tabLayout;
+    public TabLayout getTabLayout() { return tabLayout;
     }
 
-    public void showCategories(String[] categories)
-    {
+    public void showCategories(String[] categories) {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(MainActivity.this,R.layout.spinner_item_selected,categories);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         searchTabFragment.setSpinner(spinnerAdapter);
@@ -87,27 +86,22 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     }
 
     @Override
-    public String getSearchKeyWord()
-    {
+    public String getSearchKeyWord() {
         return searchTabFragment.getSearchBar().getText().toString();
     }
 
-    public String getSelectedCategory()
-    {
+    public String getSelectedCategory() {
         return searchTabFragment.getSpinner().getSelectedItem().toString();
     }
 
     @Override
-    public void showSearchScreen()
-    {
+    public void showSearchScreen() {
         searchResultsIntent.putExtra("category",getSelectedCategory());
         searchResultsIntent.putExtra("keyWords",getSearchKeyWord());
-
         startActivity(searchResultsIntent);
     }
 
-    public void showItemDetailsScreen(int listingId)
-    {
+    public void showItemDetailsScreen(int listingId) {
         itemDetailsIntent.putExtra("id",listingId);
         startActivity(itemDetailsIntent);
     }
@@ -118,10 +112,11 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         startActivity(fullScreenIntent);
     }
 
-    public SearchResultsActivity getCurrentSearchScreen() {return currentSearchScreenRef.get();}
+    public SearchResultsActivity getCurrentSearchScreen() {
+        return currentSearchScreenRef.get();}
 
-    public void setCurrentSearchScreen(SearchResultsActivity currentSearchScreen)
-    {   if(currentSearchScreen!=null){this.currentSearchScreenRef = new WeakReference<>(currentSearchScreen);}
+    public void setCurrentSearchScreen(SearchResultsActivity currentSearchScreen) {
+        if(currentSearchScreen!=null){this.currentSearchScreenRef = new WeakReference<>(currentSearchScreen);}
         else{this.currentSearchScreenRef.clear();}
     }
 }
