@@ -189,23 +189,17 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
 
         @Override
-        public void onClick(View v)
-        {
+        public void onClick(View v) {
                 RecyclerItemData currentItem = recyclerItemDataList.get(position);
-
-                if (recyclerActionMode.isActionModeactive() && !currentItem.isSelected())
-                {
+                if (recyclerActionMode.isActionModeactive() && !currentItem.isSelected()) {
                     selectItem(position, v,true);
                 }
-                else if (recyclerActionMode.isActionModeactive() && currentItem.isSelected())
-                {
+                else if (recyclerActionMode.isActionModeactive() && currentItem.isSelected()) {
                     cancelItemSelection(position, v);
                 }
-                else
-                    {
-                        int listingId = recyclerItemDataList.get(position).getListingId();
-                        AppManager.getInstance().createDetailedScreen(listingId);
-                    }
+                else {
+                        AppManager.getInstance().createDetailedScreen(recyclerItemDataList.get(position));
+                }
             }
 
         @Override

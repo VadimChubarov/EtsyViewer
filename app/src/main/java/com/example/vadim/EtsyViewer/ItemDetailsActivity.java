@@ -42,8 +42,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
     private void receiveActivityData() {
         Intent intent = getIntent();
-        listingId = intent.getIntExtra("id", 0);
-        currentItem = AppManager.getInstance().getSearchResultsItem(listingId);
+        currentItem = (RecyclerItemData) intent.getSerializableExtra("itemData");
         if (currentItem == null) {
             currentItem = AppManager.getInstance().getSavedItem(listingId);
         }
@@ -65,13 +64,16 @@ public class ItemDetailsActivity extends AppCompatActivity {
         mainPicture.setBackgroundResource(R.drawable.image_loading1);
         LinearLayout auxPicturesLayout = findViewById(R.id.aux_pictures_layout);
 
-        try { Picasso.with(this).load(currentItem.getPictureURL()[0]).into(mainPicture); }
+        try { Picasso.with(this).load(currentItem.getPictureURL().get(0)).into(mainPicture); }
         catch (Exception e) {}
 
         mainPicture.setOnClickListener(new OnPictureClickListener(0));
 
-        int previewPicturesQty = currentItem.getPictureURL().length;
+        int previewPicturesQty = currentItem.getPictureURL().size();
         int fullscreenPicturesQty = currentItem.getFullscreenURL().size();
+        if(previewPicturesQty > 4 ){
+            previewPicturesQty = 4;
+        }
         int morePictQty = fullscreenPicturesQty - previewPicturesQty;
 
         int auxPicturesHeight = mainPicture.getLayoutParams().height / 2;
@@ -81,7 +83,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         auxPicturesParams.setMargins(auxPicturesMargin, auxPicturesMargin, auxPicturesMargin, auxPicturesMargin);
 
         for (int i = 1; i < previewPicturesQty; i++) {
-            if(currentItem.getPictureURL()[i]!=null) {
+            if(currentItem.getPictureURL().get(i)!=null) {
                 ImageView auxPicture = new ImageView(this);
                 auxPicture.setLayoutParams(auxPicturesParams);
                 auxPicture.setBackgroundResource(R.drawable.image_loading1);
@@ -89,7 +91,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 auxPicture.setOnClickListener(new OnPictureClickListener(i));
                 auxPicturesLayout.addView(auxPicture);
 
-                try { Picasso.with(this).load(currentItem.getPictureURL()[i]).into(auxPicture); }
+                try { Picasso.with(this).load(currentItem.getPictureURL().get(i)).into(auxPicture); }
                 catch (Exception e) {}
             }
         }

@@ -1,11 +1,12 @@
 
 package com.example.vadim.EtsyViewer;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ListingImage implements MainInterface.ResponcePOJO {
+public class ListingImage {
 
     @SerializedName("count")
     @Expose
@@ -61,6 +62,34 @@ public class ListingImage implements MainInterface.ResponcePOJO {
 
     public void setPagination(ListingImagePagination pagination) {
         this.pagination = pagination;
+    }
+
+    public String getPreviewURL(){
+        return getResults().get(0).url170x135;
+    }
+
+    public ArrayList<String> getPicturesURL(){
+        ArrayList<String> picturesURL = new ArrayList<>();
+        for(ListingImageItem listingImageItem : getResults()){
+            picturesURL.add(listingImageItem.getUrl570xN());
+        }
+        return picturesURL;
+    }
+
+    public ArrayList<String> getPicturesFullScreenURL(){
+        ArrayList<String> picturesFullScreenURL = new ArrayList<>();
+        for(ListingImageItem listingImageItem : getResults()){
+            picturesFullScreenURL.add(listingImageItem.getUrl570xN());
+        }
+        return picturesFullScreenURL;
+    }
+
+    public ArrayList<Integer> getPicturesFullScreenId(){
+        ArrayList<Integer> picturesFullScreenId = new ArrayList<>();
+        for(ListingImageItem listingImageItem : getResults()){
+            picturesFullScreenId.add(listingImageItem.getListingImageId());
+        }
+        return picturesFullScreenId;
     }
 
     public class ListingImageItem
@@ -128,6 +157,7 @@ public class ListingImage implements MainInterface.ResponcePOJO {
         public void setListingImageId(Integer listingImageId) {
             this.listingImageId = listingImageId;
         }
+
 
         public String getHexCode() {
             return hexCode;

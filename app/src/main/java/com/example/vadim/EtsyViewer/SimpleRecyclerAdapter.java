@@ -19,6 +19,12 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         notifyDataSetChanged();
     }
 
+    public void addItems(Collection<RecyclerItemData> recyclerItems) {
+        int insertPosition = getItemCount();
+        recyclerItemDataList.addAll(recyclerItems);
+        notifyItemRangeInserted(insertPosition,getItemCount());
+    }
+
     public void clearItems() {
         recyclerItemDataList.clear();
         notifyDataSetChanged();
@@ -69,10 +75,8 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         }
 
         @Override
-        public void onClick(View v)
-        {
-            int listingId = recyclerItemDataList.get(position).getListingId();
-            AppManager.getInstance().createDetailedScreen(listingId);
+        public void onClick(View v) {
+            AppManager.getInstance().createDetailedScreen(recyclerItemDataList.get(position));
         }
     }
 }

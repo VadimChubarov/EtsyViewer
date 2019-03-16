@@ -2,27 +2,22 @@ package com.example.vadim.EtsyViewer;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppManager implements MainInterface.Presenter
-{
+public class AppManager {
     private CoreProcess coreProcess;
     private MainActivity mainActivity;
     private static AppManager appManager;
     private AppListener appListener;
-    private ArrayList<RecyclerItemData> searchResults;
 
-        private AppManager(MainActivity mainActivity)
-        {
+        private AppManager(MainActivity mainActivity) {
             this.mainActivity = mainActivity;
             this.coreProcess = new CoreProcess(mainActivity);
             this.appListener = new AppListener();
-            this.searchResults = new ArrayList<>();
         }
 
-       public static AppManager getInstance(MainActivity mainActivity)
+       public static AppManager getInstance(MainActivity mainActivity) //!!!!!!
        {
             if( appManager == null)
             {
@@ -45,17 +40,6 @@ public class AppManager implements MainInterface.Presenter
 
     public AppListener getAppListener() {return appListener;}
 
-    public ArrayList<RecyclerItemData> getSearchResults() {return searchResults;}
-
-    public RecyclerItemData getSearchResultsItem (int listingId)
-    {
-        for(RecyclerItemData item : searchResults)
-        {
-            if(item.getListingId()==listingId){return item;}
-        }
-        return null;
-    }
-
     public RecyclerItemData getSavedItem (int listingId)
     {
         for(RecyclerItemData item : coreProcess.getAllSavedListings())
@@ -65,60 +49,79 @@ public class AppManager implements MainInterface.Presenter
         return null;
     }
 
-    @Override
-    public void createListOfCategories()
-    {
-       if(coreProcess.isReadyForSearch()){new ApiRequestManager().execute("Categories");}
+
+    public void requestAllCategories() {
+           coreProcess.loadAllCategories();
     }
 
-    @Override
-    public void createListOfSearchResults()
-    {
+    public void onAllCategoriesResponse (Category category){
+        mainActivity.showCategories(category.getNames());
+    }
+
+
+    public void requestListOfSearchResults() {
         String category = mainActivity.getSelectedCategory();
         String keyWords = mainActivity.getSearchKeyWord();
-
-        if(coreProcess.isReadyForSearch() && keyWords.length()>0)
-        {
+        if(keyWords.length()>0) {
             mainActivity.showLoadingDialog(true);
-            new ApiRequestManager().execute("Listings",category,keyWords);
+            coreProcess.loadSearchListings(category,keyWords,1);
         }
     }
 
-    public void refreshListOfSearchResults(String category, String keyWords)
-    {
-        if(coreProcess.isReadyForSearch()){new ApiRequestManager().execute("Refresh",category,keyWords);}
-        else{mainActivity.getCurrentSearchScreen().showProgressBar("refresh",false);}
+    public void refreshListOfSearchResults(String category, String keyWords) {
+       if(coreProcess.isReadyForSearch()){
+           coreProcess.loadSearchListings(category,keyWords,1);
+       }
+       else{
+           mainActivity.getCurrentSearchScreen().showProgressBar("refresh",false);
+       }
     }
 
-    public void createNextPageOfSearchResults(String category, String keywords)
-    {
-        if(coreProcess.isReadyForSearch() && coreProcess.getNextListingPage()!=0)
-        {
-            String nextPage = String.valueOf(coreProcess.getNextListingPage());
-            new ApiRequestManager().execute("Pagination",category,keywords,nextPage);
+    public void requestNextPageOfSearchResults(String category, String keywords) {
+        if(coreProcess.getNextPageOfSearch()!=0 && coreProcess.isReadyForSearch()) {
+            coreProcess.loadSearchListings(category,keywords,coreProcess.getNextPageOfSearch());
             mainActivity.getCurrentSearchScreen().showProgressBar("pagination",true);
         }
     }
 
-    @Override
-    public void createDetailedScreen(int listingId)
-    {
-        mainActivity.showItemDetailsScreen(listingId);
+    public void onReceivedListOfSearchResults(ArrayList<RecyclerItemData> searchResults){
+            if(mainActivity.getCurrentSearchScreen()==null){
+                mainActivity.showSearchScreen(searchResults);
+                mainActivity.showLoadingDialog(false);
+            }
+            else if(coreProcess.getNextPageOfSearch()> 2){
+                    mainActivity.getCurrentSearchScreen().showRecyclerItems(searchResults,true);
+                    mainActivity.getCurrentSearchScreen().showProgressBar("pagination",false);
+                }
+                else{
+                    mainActivity.getCurrentSearchScreen().showRecyclerItems(searchResults,false);
+                    mainActivity.getCurrentSearchScreen().showProgressBar("refresh",false);
+                }
+        }
+
+
+  public void onErrorResponse(Throwable error){
+
     }
 
-    @Override
+  //  @Override
+    public void createDetailedScreen(RecyclerItemData itemData) {
+        mainActivity.showItemDetailsScreen(itemData);
+    }
+
+  //  @Override
     public List<RecyclerItemData> getSavedListings()
     {
         return coreProcess.getAllSavedListings();
     }
 
-    @Override
+   // @Override
     public void saveListing(RecyclerItemData itemData)
     {
         coreProcess.saveListing(itemData);
     }
 
-    @Override
+ //   @Override
     public void deleteListing(int listingId) {
         coreProcess.deleteListing(listingId);
     }
@@ -136,7 +139,7 @@ public class AppManager implements MainInterface.Presenter
     {
         public void onSearchSubmitClick() {
             if (coreProcess.isReadyForSearch()) {
-                createListOfSearchResults();
+                requestListOfSearchResults();
             }
         }
 
@@ -153,8 +156,8 @@ public class AppManager implements MainInterface.Presenter
             int listingId = listingItem.getListingId();
             if(isChecked){
                 if(getSavedItem(listingId)==null) {
-                try{ saveListing(getSearchResultsItem(listingId)); }
-                catch(NullPointerException e){saveListing(listingItem);}
+              //  try{ saveListing(getSearchResultsItem(listingId)); }
+               // catch(NullPointerException e){saveListing(listingItem);}
                 MessageService.showMessage("Item added to favorites");
                 }
                 else{ MessageService.showMessage("Item already in favorites"); }

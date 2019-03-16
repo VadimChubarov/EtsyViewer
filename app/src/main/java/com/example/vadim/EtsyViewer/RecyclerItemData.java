@@ -3,17 +3,16 @@ package com.example.vadim.EtsyViewer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
-public class RecyclerItemData implements Serializable
-{
+public class RecyclerItemData implements Serializable {
+
     private boolean isSelected;
     private int listingId;
     private String header;
     private String description;
     private String imageURL;
-    private String [] pictureURL;
+    private ArrayList<String> pictureURL;
     private ArrayList<String> fullscreenURL;
     private ArrayList<Integer> fullscreenId;
     private String price;
@@ -23,20 +22,12 @@ public class RecyclerItemData implements Serializable
     public RecyclerItemData(int listingId ,
                             String header,
                             String description,
-                            String imageURL,
-                            String[] picturesURL,
-                            ArrayList<String> fullScreenURL,
-                            ArrayList<Integer> fullscreenId,
                             String price,
                             String currency)
     {
         this.listingId = listingId;
         this.header = header;
         this.description = description;
-        this.imageURL = imageURL;
-        this.pictureURL = picturesURL;
-        this.fullscreenURL = fullScreenURL;
-        this.fullscreenId = fullscreenId;
         this.price = price;
         this.currency = currency;
 
@@ -78,11 +69,11 @@ public class RecyclerItemData implements Serializable
         this.description = description;
     }
 
-    public String[] getPictureURL() {
+    public ArrayList<String> getPictureURL() {
         return pictureURL;
     }
 
-    public void setPictureURL(String []pictureURL) {
+    public void setPictureURL(ArrayList<String> pictureURL) {
         this.pictureURL = pictureURL;
     }
 
@@ -121,14 +112,14 @@ public class RecyclerItemData implements Serializable
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof RecyclerItemData)) return false;
         RecyclerItemData that = (RecyclerItemData) o;
         return isSelected == that.isSelected &&
                 listingId == that.listingId &&
                 Objects.equals(header, that.header) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(imageURL, that.imageURL) &&
-                Arrays.equals(pictureURL, that.pictureURL) &&
+                Objects.equals(pictureURL, that.pictureURL) &&
                 Objects.equals(fullscreenURL, that.fullscreenURL) &&
                 Objects.equals(fullscreenId, that.fullscreenId) &&
                 Objects.equals(price, that.price) &&
@@ -137,9 +128,6 @@ public class RecyclerItemData implements Serializable
 
     @Override
     public int hashCode() {
-
-        int result = Objects.hash(isSelected, listingId, header, description, imageURL, fullscreenURL, fullscreenId, price, currency);
-        result = 31 * result + Arrays.hashCode(pictureURL);
-        return result;
+        return Objects.hash(isSelected, listingId, header, description, imageURL, pictureURL, fullscreenURL, fullscreenId, price, currency);
     }
 }

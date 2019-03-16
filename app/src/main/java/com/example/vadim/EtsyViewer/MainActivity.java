@@ -7,9 +7,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import com.google.gson.Gson;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainInterface.View
+public class MainActivity extends AppCompatActivity
 {
     private TabLayout tabLayout;
     private SerachTabFragment searchTabFragment;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         progressDialog = LoadingDialogManager.getProgressDialog("Loading...",false,this);
 
         AppManager appManager = AppManager.getInstance(this);
-        appManager.createListOfCategories();
+        appManager.requestAllCategories();
     }
 
     @Override
@@ -66,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         else {progressDialog.dismiss();}
     }
 
+    public void showLoadingCategories(boolean show){
+        searchTabFragment.showProgressBar(show);
+    }
+
     public Intent getItemDetailsIntent() {
         return itemDetailsIntent;}
 
@@ -78,14 +84,14 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     public TabLayout getTabLayout() { return tabLayout;
     }
 
-    public void showCategories(String[] categories) {
+    public void showCategories(List<String> categories) {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(MainActivity.this,R.layout.spinner_item_selected,categories);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         searchTabFragment.setSpinner(spinnerAdapter);
-        searchTabFragment.showProgressBar(false);
+        showLoadingCategories(false);
     }
 
-    @Override
+  //  @Override
     public String getSearchKeyWord() {
         return searchTabFragment.getSearchBar().getText().toString();
     }
@@ -94,15 +100,17 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
         return searchTabFragment.getSpinner().getSelectedItem().toString();
     }
 
-    @Override
-    public void showSearchScreen() {
+  //  @Override
+    public void showSearchScreen(List<RecyclerItemData> searchResults) {
+        String searchResultsJson = new Gson().toJson(searchResults);
         searchResultsIntent.putExtra("category",getSelectedCategory());
         searchResultsIntent.putExtra("keyWords",getSearchKeyWord());
+        searchResultsIntent.putExtra("searchResults",searchResultsJson);
         startActivity(searchResultsIntent);
     }
 
-    public void showItemDetailsScreen(int listingId) {
-        itemDetailsIntent.putExtra("id",listingId);
+    public void showItemDetailsScreen(RecyclerItemData itemData) {
+        itemDetailsIntent.putExtra("itemData",itemData);
         startActivity(itemDetailsIntent);
     }
 
@@ -113,7 +121,11 @@ public class MainActivity extends AppCompatActivity implements MainInterface.Vie
     }
 
     public SearchResultsActivity getCurrentSearchScreen() {
-        return currentSearchScreenRef.get();}
+        if (currentSearchScreenRef != null) {
+            return currentSearchScreenRef.get();
+        }
+        return null;
+    }
 
     public void setCurrentSearchScreen(SearchResultsActivity currentSearchScreen) {
         if(currentSearchScreen!=null){this.currentSearchScreenRef = new WeakReference<>(currentSearchScreen);}

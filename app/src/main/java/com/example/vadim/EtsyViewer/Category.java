@@ -1,11 +1,12 @@
 
 package com.example.vadim.EtsyViewer;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Category implements MainInterface.ResponcePOJO
+public class Category
 {
 
     @SerializedName("count")
@@ -64,14 +65,10 @@ public class Category implements MainInterface.ResponcePOJO
         this.pagination = pagination;
     }
 
-
-
-    public String[] getNames()
-    {
-        String[] names = new String[results.size()];
-        for(int i = 0; i < results.size(); i++)
-        {
-            names[i] = results.get(i).getName();
+    public List<String> getNames() {
+        List<String> names = new ArrayList<>();
+        for(CategoryItem categoryItem : results){
+            names.add(categoryItem.getName().replace("_"," "));
         }
         return names;
     }

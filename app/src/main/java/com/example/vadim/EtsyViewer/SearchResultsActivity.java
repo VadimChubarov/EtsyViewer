@@ -12,7 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class SearchResultsActivity extends AppCompatActivity {
     private SwipeRefreshLayout searchSwipeLayout;
@@ -23,6 +28,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String category;
     private String keyWords;
+    private List<RecyclerItemData> searchResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +38,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         receiveData();
         initViews();
         runSearchResultsRecycler();
-        showRecyclerItems(AppManager.getInstance().getSearchResults());
+        showRecyclerItems(searchResults,false);
         AppManager.getInstance().getMainActivity().setCurrentSearchScreen(this);
     }
 
@@ -52,6 +58,8 @@ public class SearchResultsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         category = intent.getStringExtra("category");
         keyWords = intent.getStringExtra("keyWords");
+        Type listType = new TypeToken<ArrayList<RecyclerItemData>>(){}.getType();
+        this.searchResults = new Gson().fromJson(intent.getStringExtra("searchResults"), listType);
     }
 
     private void initViews(){
@@ -93,7 +101,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 int firstVisibleItems = layoutManager.findFirstVisibleItemPosition();
 
                 if ((visibleItemCount + firstVisibleItems) >= totalItemCount) {
-                    AppManager.getInstance().createNextPageOfSearchResults(category, keyWords);
+                    AppManager.getInstance().requestNextPageOfSearchResults(category, keyWords);
                 }
             }
         };
@@ -124,9 +132,10 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
     }
 
-    protected void showRecyclerItems(Collection<RecyclerItemData> recyclerItems) {
+    protected void showRecyclerItems(Collection<RecyclerItemData> recyclerItems, boolean nextPage) {
         if (recyclerItems.size() > 0) {
-            recyclerAdapter.setItems(recyclerItems);
+           if(nextPage){recyclerAdapter.addItems(recyclerItems);}
+           else{recyclerAdapter.setItems(recyclerItems);}
         } else {
             showNoSearchResult(true);
         }

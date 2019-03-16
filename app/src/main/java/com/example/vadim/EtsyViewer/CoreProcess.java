@@ -1,207 +1,108 @@
 package com.example.vadim.EtsyViewer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import java.io.IOException;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class CoreProcess implements MainInterface.Model
-{
+public class CoreProcess {
 
-    private MainInterface.API api;
-
-    private Category currentCategoryResponse;
-
-    private Listing currentLinstingResponse;
-
-    private ArrayList<ListingImage> currentListingImagesResponse;
-
+    private RequestsRepository requestsRepository;
     private Map<Integer,RecyclerItemData> savedListings;
-
-    private boolean imagesURLready;
-
+    private ArrayList<RecyclerItemData> currentSearchResults = new ArrayList<>();
+    private int nextPageOfSearch = 0;
     private boolean readyForSearch;
-
     private AppDbManager appDbManager;
-
     private String backUpData;
 
+    public ArrayList<RecyclerItemData> getCurrentSearchResults() {
+        return currentSearchResults;
+    }
 
+    public int getNextPageOfSearch() {
+        return nextPageOfSearch;
+    }
 
-    public CoreProcess(Context context)
-    {
-        Retrofit downLoader = new Retrofit.Builder()
-                .baseUrl("https://openapi.etsy.com/v2/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public boolean isReadyForSearch() {
+        return readyForSearch;
+    }
 
-        this.api = downLoader.create(MainInterface.API.class);
-
-        this.currentListingImagesResponse = new ArrayList<>();
-
+    public CoreProcess(Context context) {
+        this.requestsRepository = new RequestsRepository();
         this.savedListings = new LinkedHashMap<>();
-
         this.readyForSearch = true;
-
         this.appDbManager = new AppDbManager(context);
 
         recoverSession();
     }
 
-    public boolean isReadyForSearch() {return readyForSearch;}
+    // network requests
 
-    @Override
-    public String[] loadAllCategories()
-    {
-        readyForSearch = false;
-        currentCategoryResponse = null;
-
-        Call<Category> categoriesCall = api.findAllTopCategory();
-        try{currentCategoryResponse = categoriesCall.execute().body();}catch(IOException e){}
-
-        readyForSearch = true;
-
-        return getNamesOfCategories();
+    @SuppressLint("CheckResult")
+    public void loadAllCategories() {
+        requestsRepository.getAllCategoriesRequest()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(AppManager.getInstance()::onAllCategoriesResponse,this::onErrorResponse);
     }
 
-    @Override
-    public String[] getNamesOfCategories()
-    {
-        return currentCategoryResponse.getNames();
+
+    @SuppressLint("CheckResult")
+    public void loadSearchListings(String category, String keyWords,int page) {
+            readyForSearch = false;
+            requestsRepository.getSearchListingsRequest(category, keyWords, page)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onListingsDataReceived, this::onErrorResponse);
     }
+    @SuppressLint("CheckResult")
+    private void onListingsDataReceived(Listing listingsData){
+        nextPageOfSearch = listingsData.getPagination().getNextPage();
 
-    @Override
-    public void loadSearchListings(String categoty, String keyWords)
-    {
-        readyForSearch = false;
-        currentLinstingResponse = null;
-
-        Call<Listing> listingsCall = api.findAllListingActive(categoty,keyWords,10);
-        try{currentLinstingResponse = listingsCall.execute().body();}catch(IOException e){}
-
-        readyForSearch = true;
-    }
-
-    public void loadSearchListingsPage(String categoty, String keyWords, String page)
-    {
-        readyForSearch = false;
-        currentLinstingResponse = null;
-
-        int nextPage = Integer.parseInt(page);
-        Call<Listing> listingsCall = api.findAllListingActive(categoty,keyWords,10,nextPage);
-
-        try{currentLinstingResponse = listingsCall.execute().body();}catch(IOException e){}
-
-        readyForSearch = true;
-    }
-
-    public int getNextListingPage()
-    {
-        try{return currentLinstingResponse.getPagination().getNextPage();}
-        catch(Exception e){return 0;}
-    }
-
-    @Override
-    public int[] getSearchListingsId()
-    {
-        return  currentLinstingResponse.getAllListingsId();
-    }
-
-    @Override
-    public void loadListingImageURL(final int [] listingId)
-    {
-        readyForSearch = false;
-        imagesURLready = false;
-        currentListingImagesResponse.clear();
-
-        for(int i = 0; i < listingId.length; i++)
-        {
-            Call<ListingImage> listingImagesCall = api.findAllListingImages(listingId[i]);
-            listingImagesCall.enqueue(new Callback<ListingImage>() {
-                @Override
-                public void onResponse(Call<ListingImage> call, Response<ListingImage> response)
-                {
-                    if (response.isSuccessful())
-                    {
-                        currentListingImagesResponse.add(response.body());
-                        if(currentListingImagesResponse.size()==listingId.length){imagesURLready = true;}
-                    } else {
-                        System.out.println("response code " + response.code());}
-                }
-                @Override
-                public void onFailure(Call<ListingImage> call, Throwable t)
-                {System.out.println("failure " + t);}
-            });
-            try{Thread.sleep(250);}catch(Exception e){}
+        for(Listing.ListingItem listingItem : listingsData.getResults()){
+            currentSearchResults.add(new RecyclerItemData(
+                    listingItem.getListingId(),
+                    listingItem.getTitle(),
+                    listingItem.getDescription(),
+                    listingItem.getPrice(),
+                    listingItem.getCurrencyCode()));
         }
+        int [] listingId = listingsData.getAllListingsId();
+        Observable.range(0, listingId.length)
+                  .flatMap(i ->  requestsRepository.getListnigImagesRequest(listingId[i]))
+                  .toList()
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(this::onListingsImagesReceived, this::onErrorResponse);
+    }
+    private void onListingsImagesReceived(List<ListingImage> listingsImageData){
+       for(int i = 0; i < currentSearchResults.size(); i++){
+           RecyclerItemData itemData = currentSearchResults.get(i);
+           ListingImage listingImage = listingsImageData.get(i);
 
-        int count = 0;
-        while (count < 20)
-        {
-            if (imagesURLready)
-            {
-                imagesURLready = false;
-                break;
-            }
-            try {Thread.sleep(500);} catch (Exception e){}
-            count++;
-        }
+           itemData.setImageURL(listingImage.getPreviewURL());
+           itemData.setPictureURL(listingImage.getPicturesURL());
+           itemData.setFullscreenURL(listingImage.getPicturesFullScreenURL());
+           itemData.setFullscrenId(listingImage.getPicturesFullScreenId());
+       }
+       AppManager.getInstance().onReceivedListOfSearchResults(new ArrayList<>(currentSearchResults));
+       currentSearchResults.clear();
+       readyForSearch = true;
+    }
+
+    private void onErrorResponse(Throwable error){
         readyForSearch = true;
+        MessageService.showMessage(error.toString());
+        AppManager.getInstance().onErrorResponse(error);
     }
 
-    @Override
-    public RecyclerItemData  getListingDetails(int listingId)
-    {
-        Listing.ListingItem listingItem = currentLinstingResponse.getListingItemById(listingId);
 
-        String header = listingItem.getTitle();
-        String description = listingItem.getDescription();
-        String price = listingItem.getPrice();
-        String currency = listingItem.getCurrencyCode();
-        String listingImageURL = "";
-        String [] listingPicturesURL = new String[4];
-        ArrayList<String> listingFullScreenURL = new ArrayList<>();
-        ArrayList<Integer> listingFullScreenId = new ArrayList<>();
-
-
-        for(ListingImage listingImage : currentListingImagesResponse)
-        {
-          if (listingImage.getResults().get(0).getListingId() == listingId)
-          {
-              listingImageURL = listingImage.getResults().get(0).getUrl170x135();
-
-              int picturesQty = listingImage.getResults().size();
-              if(picturesQty>listingPicturesURL.length){picturesQty = listingPicturesURL.length;}
-
-              for(int i = 0; i < picturesQty; i++)
-              {
-                  listingPicturesURL[i] = listingImage.getResults().get(i).getUrl570xN();
-              }
-              for(ListingImage.ListingImageItem imageItem  : listingImage.getResults())
-              {
-                 listingFullScreenURL.add(imageItem.getUrl570xN());
-                 listingFullScreenId.add(imageItem.getListingImageId());
-              }
-          }
-        }
-        return new RecyclerItemData(
-                listingId,
-                header,
-                description,
-                listingImageURL,
-                listingPicturesURL,
-                listingFullScreenURL,
-                listingFullScreenId,
-                price,
-                currency);
-    }
+    // DataBase requests
 
     public boolean isListingSaved(int listingId)
     {
@@ -209,7 +110,7 @@ public class CoreProcess implements MainInterface.Model
        return false;
     }
 
-    @Override
+   // @Override
     public void saveListing(RecyclerItemData itemData)
     {
         if (!isListingSaved(itemData.getListingId()))
@@ -219,14 +120,14 @@ public class CoreProcess implements MainInterface.Model
         }
     }
 
-    @Override
+   // @Override
     public void deleteListing(int listingId)
     {
         savedListings.remove(listingId);
         saveSession();
     }
 
-    @Override
+   // @Override
     public List<RecyclerItemData> getAllSavedListings()
     {
        List<RecyclerItemData> listingItems = new ArrayList<>();
@@ -238,7 +139,7 @@ public class CoreProcess implements MainInterface.Model
        return listingItems;
     }
 
-    @Override
+   // @Override
     public void saveSession()
     {
         String currentSessionData = new Gson().toJson(savedListings);
@@ -246,7 +147,7 @@ public class CoreProcess implements MainInterface.Model
         backUpData = appDbManager.loadAppData();
     }
 
-    @Override
+   // @Override
     public void recoverSession()
     {
          backUpData = appDbManager.loadAppData();
