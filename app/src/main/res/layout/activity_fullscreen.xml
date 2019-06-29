@@ -3,17 +3,13 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="#000000"
-             tools:context="com.example.vadim.EtsyViewer.FullscreenActivity">
+             tools:context="com.example.vadim.EtsyViewer.view.FullscreenActivity">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-
-    <com.example.vadim.EtsyViewer.ExtendedViewPager
+    <com.example.vadim.EtsyViewer.view.support.ExtendedViewPager
             android:id="@+id/full_screen_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-    </com.example.vadim.EtsyViewer.ExtendedViewPager>
+    </com.example.vadim.EtsyViewer.view.support.ExtendedViewPager>
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
