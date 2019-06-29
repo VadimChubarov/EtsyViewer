@@ -19,12 +19,13 @@
   <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen7.png" width="200"/>
   <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen6.png" width="200"/>
   
-  Навигация и просмотр товаров выполнены с помощью ToolBar/ViewPager, RecyclerView+swipe to refresh/pagination,
-  взаимодействие c RESTful API - Retrofit,Picasso, формат - JSON, архитектура - MVP
+  Архитектура: MVP
   
   Технологии:
-  - MVP
   - Retrofit2
+  - RxJava2
+  - Room
   - Picasso
-  - GsonConverterFactory
-  - Хранение данных SQLite
+  - GSON
+  
+   Хранение данных: SQLite
