@@ -1,21 +1,36 @@
 package com.example.vadim.EtsyViewer;
 
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Entity(tableName = "saved_listings")
 public class RecyclerItemData implements Serializable {
 
     private boolean isSelected;
+    @PrimaryKey
     private int listingId;
+
     private String header;
+
     private String description;
+
     private String imageURL;
-    private ArrayList<String> pictureURL;
-    private ArrayList<String> fullscreenURL;
-    private ArrayList<Integer> fullscreenId;
+
+    @TypeConverters(DbListStringConverter.class)
+    private List<String> pictureURL;
+    @TypeConverters(DbListStringConverter.class)
+    private List<String> fullscreenURL;
+    @TypeConverters(DbListIntegerConverter.class)
+    private List<Integer> fullscreenId;
+
     private String price;
+
     private String currency;
 
 
@@ -69,27 +84,27 @@ public class RecyclerItemData implements Serializable {
         this.description = description;
     }
 
-    public ArrayList<String> getPictureURL() {
+    public List<String> getPictureURL() {
         return pictureURL;
     }
 
-    public void setPictureURL(ArrayList<String> pictureURL) {
+    public void setPictureURL(List<String> pictureURL) {
         this.pictureURL = pictureURL;
     }
 
-    public ArrayList<String> getFullscreenURL() {
+    public List<String> getFullscreenURL() {
         return fullscreenURL;
     }
 
-    public void setFullscreenURL(ArrayList<String> fullscreenURL) {
+    public void setFullscreenURL(List<String> fullscreenURL) {
         this.fullscreenURL = fullscreenURL;
     }
 
-    public ArrayList<Integer> getFullscreenId() {
+    public List<Integer> getFullscreenId() {
         return fullscreenId;
     }
 
-    public void setFullscrenId(ArrayList<Integer> fullscrenId) {
+    public void setFullscrenId(List<Integer> fullscrenId) {
         this.fullscreenId = fullscrenId;
     }
 
@@ -107,6 +122,10 @@ public class RecyclerItemData implements Serializable {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public void setFullscreenId(List<Integer> fullscreenId) {
+        this.fullscreenId = fullscreenId;
     }
 
     @Override

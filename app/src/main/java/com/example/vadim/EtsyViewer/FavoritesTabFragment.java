@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
+import java.util.List;
+
 
 public class FavoritesTabFragment extends Fragment
 {
@@ -30,7 +32,6 @@ public class FavoritesTabFragment extends Fragment
         addFavorites = view.findViewById(R.id.vg_add_favorites_image);
         addFavorites.setOnClickListener(new FavoritesTabListener());
         runFavoritesRecycler();
-        showRecyclerItems();
 
         return view ;
     }
@@ -38,7 +39,7 @@ public class FavoritesTabFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        showRecyclerItems();
+        AppManager.getInstance().getSavedListingsFromDB();
     }
 
     @Override
@@ -61,10 +62,10 @@ public class FavoritesTabFragment extends Fragment
         new RecyclerAnimator().setDeleteAnimationSpeed(favoritesRecycler,250);
     }
 
-    public void showRecyclerItems() {
+    public void showRecyclerItems(List<RecyclerItemData> savedListings) {
         recyclerAdapter.clearItems();
-        if(AppManager.getInstance().getSavedListings().size()>0) {
-            recyclerAdapter.setItems(AppManager.getInstance().getSavedListings());
+        if(savedListings!=null) {
+            recyclerAdapter.setItems(savedListings);
             showAddFavorites(false);
         }
         else showAddFavorites(true);

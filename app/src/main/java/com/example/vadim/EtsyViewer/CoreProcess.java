@@ -2,27 +2,20 @@ package com.example.vadim.EtsyViewer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.schedulers.Schedulers;
-import java.lang.reflect.Type;
 import java.util.*;
 
 public class CoreProcess {
 
     private RequestsRepository requestsRepository;
-    private Map<Integer,RecyclerItemData> savedListings;
     private ArrayList<RecyclerItemData> currentSearchResults = new ArrayList<>();
     private int nextPageOfSearch = 0;
     private boolean readyForSearch;
-    private AppDbManager appDbManager;
-    private String backUpData;
-
-    public ArrayList<RecyclerItemData> getCurrentSearchResults() {
-        return currentSearchResults;
-    }
+    private AppDataBase appDataBase;
 
     public int getNextPageOfSearch() {
         return nextPageOfSearch;
@@ -34,11 +27,8 @@ public class CoreProcess {
 
     public CoreProcess(Context context) {
         this.requestsRepository = new RequestsRepository();
-        this.savedListings = new LinkedHashMap<>();
         this.readyForSearch = true;
-        this.appDbManager = new AppDbManager(context);
-
-        recoverSession();
+        this.appDataBase = AppDataBase.getDatabase(context);
     }
 
     // network requests
@@ -104,54 +94,87 @@ public class CoreProcess {
 
     // DataBase requests
 
-    public boolean isListingSaved(int listingId)
-    {
-       if(savedListings.containsKey(listingId)){return true;}
-       return false;
+    public void saveListingToDB(RecyclerItemData itemData) {
+        Completable.fromAction(() -> {
+            appDataBase.favoritesDao().insert(itemData);
+        }).subscribeOn(Schedulers.io()).subscribe();
     }
 
-   // @Override
-    public void saveListing(RecyclerItemData itemData)
-    {
-        if (!isListingSaved(itemData.getListingId()))
-        {
-            savedListings.put(itemData.getListingId(), itemData);
-            saveSession();
-        }
+    public void deleteListingFromDB(int listingId) {
+        Completable.fromAction(() -> {
+           appDataBase.favoritesDao().deleteItem(listingId);
+        }).subscribeOn(Schedulers.io()).subscribe();
     }
 
-   // @Override
-    public void deleteListing(int listingId)
-    {
-        savedListings.remove(listingId);
-        saveSession();
+    public void deleteListingsFromDB(List<Integer> listngIdList) {
+        Completable.fromAction(() -> {
+            appDataBase.favoritesDao().deleteItems(listngIdList);
+            checkIsDbEmpty();
+        }).subscribeOn(Schedulers.io()).subscribe();
     }
 
-   // @Override
-    public List<RecyclerItemData> getAllSavedListings()
-    {
-       List<RecyclerItemData> listingItems = new ArrayList<>();
 
-        for(Map.Entry<Integer, RecyclerItemData> listingItem : savedListings.entrySet())
-       {
-           listingItems.add(listingItem.getValue());
+    public void getListingFromDB(int listingId){
+        appDataBase.favoritesDao().getItem(String.valueOf(listingId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableMaybeObserver<RecyclerItemData>() {
+                    @Override
+                    public void onSuccess(RecyclerItemData savedListing) {
+                        AppManager.getInstance().onIsListingSavedInDB(savedListing);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                       onErrorResponse(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        AppManager.getInstance().onIsListingSavedInDB(null);
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    public void getAllListingsFromDB() {
+        appDataBase.favoritesDao()
+                .getAllItems()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( this::onLoadAllListingsFromDB, this::onDBErrorResponse, this::onDBisEmpty);
+    }
+
+    private void onLoadAllListingsFromDB(List<RecyclerItemData> itemData){
+       if(itemData.size()!=0) {
+           AppManager.getInstance().onSavedListingsReceived(itemData);
+       }else{
+           onDBisEmpty();
        }
-       return listingItems;
     }
 
-   // @Override
-    public void saveSession()
-    {
-        String currentSessionData = new Gson().toJson(savedListings);
-        appDbManager.saveAppData(currentSessionData,backUpData);
-        backUpData = appDbManager.loadAppData();
+    private void onDBisEmpty(){
+       AppManager.getInstance().onSavedListingsReceived(new ArrayList<>());
     }
 
-   // @Override
-    public void recoverSession()
-    {
-         backUpData = appDbManager.loadAppData();
-         Type itemsMapType = new TypeToken<Map<Integer, RecyclerItemData>>() {}.getType();
-         if(backUpData!=null){savedListings = new Gson().fromJson(backUpData, itemsMapType);}
+    @SuppressLint("CheckResult")
+    public void checkIsDbEmpty(){
+        appDataBase.favoritesDao()
+                .getAllItems()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( this::onCheckDbIsEmpty, this::onDBErrorResponse, this::onDBisEmpty);
+    }
+
+    private void onCheckDbIsEmpty(List<RecyclerItemData> itemData){
+       if(itemData.size()==0){
+           onDBisEmpty();
+       }
+    }
+
+
+    private void onDBErrorResponse(Throwable error){
+        MessageService.showMessage(error.toString());
+        AppManager.getInstance().onErrorResponse(error);
     }
 }

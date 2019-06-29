@@ -12,17 +12,17 @@ import com.github.lguipeng.library.animcheckbox.AnimCheckBox;
 import com.squareup.picasso.Picasso;
 import java.util.*;
 
-public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRecyclerAdapter.RecyclerViewHolder>
-{
+public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRecyclerAdapter.RecyclerViewHolder> {
     private int selectionColor = Color.LTGRAY;
     private List<RecyclerItemData> recyclerItemDataList = new ArrayList<>();
     private ActionModeManager recyclerActionMode = new ActionModeManager();
 
 
-    public ActionModeManager getRecyclerActionMode() {return recyclerActionMode;}
+    public ActionModeManager getRecyclerActionMode() {
+        return recyclerActionMode;
+    }
 
-    public void setSelectionColor(String selectionColor)
-    {
+    public void setSelectionColor(String selectionColor) {
         this.selectionColor = Color.parseColor(selectionColor);
     }
 
@@ -30,14 +30,12 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     {
         final AnimCheckBox itemCheckbox = ItemView.findViewById(R.id.recycler_checkbox);
 
-        if(active)
-        {
+        if(active) {
             itemCheckbox.setVisibility(View.VISIBLE);
             itemCheckbox.setChecked(true,animation);
         }
-        else
-            {
-                itemCheckbox.setChecked(false,animation);
+        else {
+            itemCheckbox.setChecked(false,animation);
 
                 OnDelayTaskWithUI onDelayTaskWithUI = new OnDelayTaskWithUI();
                 onDelayTaskWithUI.setDelay(300);
@@ -46,20 +44,17 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             }
     }
 
-    public void setItems(Collection<RecyclerItemData> recyclerItems)
-    {
+    public void setItems(Collection<RecyclerItemData> recyclerItems) {
         recyclerItemDataList.addAll(recyclerItems);
         notifyDataSetChanged();
     }
 
-    public void clearItems()
-    {
+    public void clearItems() {
         recyclerItemDataList.clear();
         notifyDataSetChanged();
     }
 
-   public void deleteSelectedItems()
-   {
+   public void deleteSelectedItems() {
        for (int i = 0; i < recyclerItemDataList.size();i++) {
            if(recyclerItemDataList.get(i).isSelected()) {
                recyclerItemDataList.remove(i);
@@ -70,52 +65,40 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
        }
    }
 
-    public boolean anyItemSelected()
-    {
-        for (RecyclerItemData item : recyclerItemDataList)
-        {
+    public boolean anyItemSelected() {
+        for (RecyclerItemData item : recyclerItemDataList) {
             if (item.isSelected()){return true;}
         }
         return false;
     }
 
-    public void selectItem(int position, View itemView, boolean animation)
-    {
+    public void selectItem(int position, View itemView, boolean animation) {
         recyclerItemDataList.get(position).setSelected(true);
         itemView.setBackgroundColor(selectionColor);
         setItemCheckbox(itemView,true,animation);
         recyclerActionMode.updateActionModeItemCount();
     }
 
-    public void cancelItemSelection(int position, View itemView)
-    {
+    public void cancelItemSelection(int position, View itemView) {
         recyclerItemDataList.get(position).setSelected(false);
-
         itemView.setBackgroundColor(Color.TRANSPARENT);
         setItemCheckbox(itemView,false,true);
-
-        if (!anyItemSelected())
-        {
+        if (!anyItemSelected()) {
             recyclerActionMode.activateActionMode(false);
         }
         recyclerActionMode.updateActionModeItemCount();
     }
 
-    public void cancelAllSelections()
-    {
-        for (int i = 0; i < recyclerItemDataList.size(); i++)
-        {
+    public void cancelAllSelections() {
+        for (int i = 0; i < recyclerItemDataList.size(); i++) {
            recyclerItemDataList.get(i).setSelected(false);
            notifyItemChanged(i);
         }
     }
 
-    public List<RecyclerItemData> getAllSelectedItems()
-    {
+    public List<RecyclerItemData> getAllSelectedItems() {
         List<RecyclerItemData> selectedItems = new ArrayList<>();
-
-        for (RecyclerItemData item : recyclerItemDataList)
-        {
+        for (RecyclerItemData item : recyclerItemDataList) {
             if(item.isSelected()){selectedItems.add(item);}
         }
         return selectedItems;
@@ -130,19 +113,14 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i)
-    {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i) {
         recyclerViewHolder.bind(recyclerItemDataList.get(i));
-
-        if (recyclerItemDataList.get(i).isSelected())
-        {
+        if (recyclerItemDataList.get(i).isSelected()) {
             selectItem(i, recyclerViewHolder.itemView,false);
-        }else
-            {
-                recyclerViewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
-                recyclerViewHolder.recyclerCheckBox.setVisibility(View.INVISIBLE);
+        }else {
+            recyclerViewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            recyclerViewHolder.recyclerCheckBox.setVisibility(View.INVISIBLE);
             }
-
         OnItemClickListener onItemClickListener = new OnItemClickListener(i);
         recyclerViewHolder.itemView.setOnLongClickListener(onItemClickListener);
         recyclerViewHolder.itemView.setOnClickListener(onItemClickListener);
@@ -154,24 +132,20 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
     }
 
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder
-    {
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private ImageView recyclerImage;
         private TextView recyclerText;
         private  AnimCheckBox recyclerCheckBox;
 
 
-        public RecyclerViewHolder(View itemView)
-        {
+        public RecyclerViewHolder(View itemView) {
             super(itemView);
-
             recyclerImage = itemView.findViewById(R.id.recyclerImage);
             recyclerText = itemView.findViewById(R.id.recyclerText);
             recyclerCheckBox = itemView.findViewById(R.id.recycler_checkbox);
         }
 
-        public void bind(RecyclerItemData recyclerItemData)
-        {
+        public void bind(RecyclerItemData recyclerItemData) {
             recyclerText.setText(recyclerItemData.getHeader());
             Picasso.with(itemView.getContext()).load(recyclerItemData.getImageURL()).into(recyclerImage);
             recyclerCheckBox.setChecked(false,false);
@@ -179,8 +153,7 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
     }
 
-    private class OnItemClickListener implements View.OnClickListener, View.OnLongClickListener
-    {
+    private class OnItemClickListener implements View.OnClickListener, View.OnLongClickListener {
         private int position;
 
         public OnItemClickListener(int position)
@@ -203,12 +176,9 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
             }
 
         @Override
-        public boolean onLongClick(View v)
-        {
+        public boolean onLongClick(View v) {
             RecyclerItemData currentItem = recyclerItemDataList.get(position);
-
-            if (!currentItem.isSelected())
-            {
+            if (!currentItem.isSelected()) {
                 if (!recyclerActionMode.isActionModeactive()){recyclerActionMode.activateActionMode(true);}
                 selectItem(position, v,true);
             }
@@ -218,35 +188,29 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
     }
 
-    protected class ActionModeManager implements android.support.v7.view.ActionMode.Callback
-    {
+    protected class ActionModeManager implements android.support.v7.view.ActionMode.Callback {
         private ActionMode selectedItemsMode;
         private boolean isActionModeactive = false;
 
         public boolean isActionModeactive() {return isActionModeactive;}
 
 
-        public void activateActionMode(boolean activate)
-        {
-            if (activate)
-            {
+        public void activateActionMode(boolean activate) {
+            if (activate) {
                 isActionModeactive = true;
                 selectedItemsMode = AppManager.getInstance().getMainActivity().startSupportActionMode(recyclerActionMode);
             }
             else if(isActionModeactive) {selectedItemsMode.finish();}
         }
 
-        public void updateActionModeItemCount()
-        {
-            if(isActionModeactive)
-            {
+        public void updateActionModeItemCount() {
+            if(isActionModeactive) {
                 selectedItemsMode.setTitle(String.valueOf(getAllSelectedItems().size()));
             }
         }
 
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu)
-        {
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.action_menu, menu);
             return true;
@@ -258,10 +222,8 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item)
-        {
-            switch(item.getItemId())
-            {
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch(item.getItemId()) {
                 case R.id.menu_delete : AppManager.getInstance().deleteSelectedListings(getAllSelectedItems());
                                         deleteSelectedItems();
                                         if (!anyItemSelected()){activateActionMode(false);}
@@ -271,15 +233,13 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode)
-        {
+        public void onDestroyActionMode(ActionMode mode) {
             isActionModeactive = false;
             cancelAllSelections();
         }
     }
 
-    private class OnDelayTaskWithUI extends AsyncTask
-    {
+    private class OnDelayTaskWithUI extends AsyncTask {
         private int delay = 0;
         private View view;
 
@@ -287,15 +247,13 @@ public class SelectableRecyclerAdapter extends RecyclerView.Adapter<SelectableRe
         public void setView(View view) {this.view = view;}
 
         @Override
-        protected Object doInBackground(Object[] objects)
-        {
+        protected Object doInBackground(Object[] objects) {
             try{Thread.sleep(delay);}catch(Exception e){}
             return null;
         }
 
         @Override
-        protected void onPostExecute(Object o)
-        {
+        protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if(!((AnimCheckBox) view).isChecked())
             {view.setVisibility(View.INVISIBLE);}

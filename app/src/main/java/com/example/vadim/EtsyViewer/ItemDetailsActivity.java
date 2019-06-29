@@ -11,14 +11,13 @@ import com.squareup.picasso.Picasso;
 
 public class ItemDetailsActivity extends AppCompatActivity {
 
-    int listingId;
     RecyclerItemData currentItem;
+    boolean isItemSaved;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
-
         receiveActivityData();
         setUpToolBar();
         setUpDescriptions();
@@ -31,9 +30,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.item_details_toolbar);
         ImageButton backButton = findViewById(R.id.item_details_toolbar_back_arrow);
         CheckBox favoriteCheckbox = findViewById(R.id.item_details_toolbar_favorites_checkbox);
-
-        favoriteCheckbox.setChecked(AppManager.getInstance().getSavedItem(listingId) != null);
-
+        favoriteCheckbox.setChecked(isItemSaved);
         OnToolbarListener onToolbarListener = new OnToolbarListener();
         backButton.setOnClickListener(onToolbarListener);
         favoriteCheckbox.setOnCheckedChangeListener(onToolbarListener);
@@ -43,16 +40,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private void receiveActivityData() {
         Intent intent = getIntent();
         currentItem = (RecyclerItemData) intent.getSerializableExtra("itemData");
-        if (currentItem == null) {
-            currentItem = AppManager.getInstance().getSavedItem(listingId);
-        }
+        isItemSaved =  intent.getBooleanExtra("isItemSaved",false);
     }
 
     private void setUpDescriptions() {
         TextView itemHeader = findViewById(R.id.ItemHeader);
         TextView itemDescription = findViewById(R.id.ItemDescription);
         TextView itemPrice = findViewById(R.id.ItemPrice);
-
         itemHeader.setText(currentItem.getHeader());
         itemDescription.setText(currentItem.getDescription());
         itemPrice.setText(currentItem.getPrice());

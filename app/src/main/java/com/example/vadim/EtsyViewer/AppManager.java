@@ -17,10 +17,9 @@ public class AppManager {
             this.appListener = new AppListener();
         }
 
-       public static AppManager getInstance(MainActivity mainActivity) //!!!!!!
+       public static AppManager getInstance(MainActivity mainActivity)
        {
-            if( appManager == null)
-            {
+            if( appManager == null) {
                 appManager = new AppManager(mainActivity);
             }
             return appManager;
@@ -39,16 +38,6 @@ public class AppManager {
     public MainActivity getMainActivity() {return mainActivity;}
 
     public AppListener getAppListener() {return appListener;}
-
-    public RecyclerItemData getSavedItem (int listingId)
-    {
-        for(RecyclerItemData item : coreProcess.getAllSavedListings())
-        {
-            if(item.getListingId()==listingId){return item;}
-        }
-        return null;
-    }
-
 
     public void requestAllCategories() {
            coreProcess.loadAllCategories();
@@ -104,35 +93,48 @@ public class AppManager {
 
     }
 
-  //  @Override
     public void createDetailedScreen(RecyclerItemData itemData) {
         mainActivity.showItemDetailsScreen(itemData);
     }
 
-  //  @Override
-    public List<RecyclerItemData> getSavedListings()
-    {
-        return coreProcess.getAllSavedListings();
+    public void isListingSavedInDB(int listingId){
+       coreProcess.getListingFromDB(listingId);
     }
 
-   // @Override
+    public void onIsListingSavedInDB(RecyclerItemData itemData){
+        if(itemData!=null){
+            mainActivity.onCheckIsItemSaved(true);
+        }else{
+            mainActivity.onCheckIsItemSaved(false);
+        }
+    }
+
+    public void getSavedListingsFromDB() {
+         coreProcess.getAllListingsFromDB();
+    }
+
+    public void onSavedListingsReceived(List<RecyclerItemData> savedListings){
+        mainActivity.getFavoritesTabFragment().showRecyclerItems(savedListings);
+        if(savedListings.size()==0){
+            mainActivity.getFavoritesTabFragment().showAddFavorites(true);
+        }
+    }
+
     public void saveListing(RecyclerItemData itemData)
     {
-        coreProcess.saveListing(itemData);
+        coreProcess.saveListingToDB(itemData);
     }
 
- //   @Override
     public void deleteListing(int listingId) {
-        coreProcess.deleteListing(listingId);
+        coreProcess.deleteListingFromDB(listingId);
     }
 
     public void deleteSelectedListings(List<RecyclerItemData> selectedItems) {
+        List<Integer> idList = new ArrayList<>();
         for(RecyclerItemData item : selectedItems) {
-            deleteListing(item.getListingId());
+            idList.add(item.getListingId());
         }
-        if(coreProcess.getAllSavedListings().size() == 0){
-            mainActivity.getFavoritesTabFragment().showAddFavorites(true);
-        }
+        coreProcess.deleteListingsFromDB(idList);
     }
 
     public class AppListener
@@ -153,18 +155,13 @@ public class AppManager {
         }
 
         public void onFavoriteListingChecked (RecyclerItemData listingItem, boolean isChecked) {
-            int listingId = listingItem.getListingId();
             if(isChecked){
-                if(getSavedItem(listingId)==null) {
-              //  try{ saveListing(getSearchResultsItem(listingId)); }
-               // catch(NullPointerException e){saveListing(listingItem);}
+                saveListing(listingItem);
                 MessageService.showMessage("Item added to favorites");
-                }
-                else{ MessageService.showMessage("Item already in favorites"); }
             }
             else {
-                deleteListing(listingId);
-                MessageService.showMessage("Item deleted from favorites");
+                  deleteListing(listingItem.getListingId());
+                  MessageService.showMessage("Item deleted from favorites");
             }
         }
 

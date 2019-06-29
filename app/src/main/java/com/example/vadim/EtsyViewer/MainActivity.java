@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity
         showLoadingCategories(false);
     }
 
-  //  @Override
     public String getSearchKeyWord() {
         return searchTabFragment.getSearchBar().getText().toString();
     }
@@ -100,7 +99,6 @@ public class MainActivity extends AppCompatActivity
         return searchTabFragment.getSpinner().getSelectedItem().toString();
     }
 
-  //  @Override
     public void showSearchScreen(List<RecyclerItemData> searchResults) {
         String searchResultsJson = new Gson().toJson(searchResults);
         searchResultsIntent.putExtra("category",getSelectedCategory());
@@ -111,7 +109,12 @@ public class MainActivity extends AppCompatActivity
 
     public void showItemDetailsScreen(RecyclerItemData itemData) {
         itemDetailsIntent.putExtra("itemData",itemData);
-        startActivity(itemDetailsIntent);
+        AppManager.getInstance().isListingSavedInDB(itemData.getListingId());
+    }
+
+    public void onCheckIsItemSaved(boolean saved){
+       itemDetailsIntent.putExtra("isItemSaved",saved);
+       startActivity(itemDetailsIntent);
     }
 
     public void showFullScreen(int pictureId, RecyclerItemData picturesData) {
