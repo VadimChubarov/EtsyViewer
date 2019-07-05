@@ -53,7 +53,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         TextView itemPrice = findViewById(R.id.ItemPrice);
         itemHeader.setText(currentItem.getHeader());
         itemDescription.setText(currentItem.getDescription());
-        itemPrice.setText(currentItem.getPrice());
+        itemPrice.setText(String.format("%s %s",currentItem.getCurrency(),currentItem.getPrice()));
     }
 
 

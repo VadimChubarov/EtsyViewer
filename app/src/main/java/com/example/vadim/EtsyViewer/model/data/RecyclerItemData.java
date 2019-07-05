@@ -120,7 +120,7 @@ public class RecyclerItemData implements Serializable {
     }
 
     public String getPrice() {
-        return currency+" "+price;
+        return price;
     }
 
     public void setPrice(String price) {
