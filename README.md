@@ -1,30 +1,31 @@
 Клиент-серверное Android приложение для поиска, просмотра и сохранения товаров на сервисе Etsy.
-(приложение в процессе доработки визуальной части и оптимизации бизнес-логики)
 
 Основные функции:
 
 - поиск товаров по категориям и ключевым словам, введенным пользователем
 
-  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen1.png" width="200"/>
-  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen2.png" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-45.jpg" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-42.jpg" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-39.jpg" width="200"/>
   
 - просмотр детальной информации о товаре
 
-  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen4.png" width="200"/>
-  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen5.png" width="200"/>
-  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen3.png" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-35.jpg" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-25.jpg" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-22.jpg" width="200"/>
   
 - сохранение товаров в "избранное"/ выбор и удаление
 
-  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen7.png" width="200"/>
-  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/screen6.png" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-18.jpg" width="200"/>
+  <img src="https://github.com/VadimChubarov/Screenshots-repo/blob/master/photo_2019-06-29_15-25-12.jpg" width="200"/>
   
-  Навигация и просмотр товаров выполнены с помощью ToolBar/ViewPager, RecyclerView+swipe to refresh/pagination,
-  взаимодействие c RESTful API - Retrofit,Picasso, формат - JSON, архитектура - MVP
+  Архитектура: MVP
   
   Технологии:
-  - MVP
   - Retrofit2
+  - RxJava2
+  - Room
   - Picasso
-  - GsonConverterFactory
-  - Хранение данных SQLite
+  - GSON
+  
+   Хранение данных: SQLite
